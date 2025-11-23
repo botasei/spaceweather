@@ -798,7 +798,7 @@ function renderAlmaKChart(labels, values) {
         const [datePart, timePartFull] = lastRaw.split(" ");
         const time = timePartFull ? timePartFull.slice(0, 5) : "";
         document.getElementById("alma-last-update").textContent =
-            formatDateShort(datePart) + " " + time + " UT";
+            formatDateShort(datePart) + " " + Время + " UT";
     } else {
         document.getElementById("alma-last-update").textContent = "нет данных";
     }
@@ -875,6 +875,7 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
 
 
 
