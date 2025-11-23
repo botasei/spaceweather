@@ -776,7 +776,7 @@ function renderAlmaKChart(labels, values) {
                             if (prevDatePart === datePart) {
                                 return time;          // та же дата — только время
                             } else {
-                                return formatDateShort(datePart) + "\n" + time; // новая дата
+                                return formatDateShort(datePart) + "\n" + Время; // новая дата
                             }
                         }
                     },
@@ -875,6 +875,7 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
 
 
 
