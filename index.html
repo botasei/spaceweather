@@ -710,7 +710,6 @@ document.getElementById("btn-reset").onclick = () => {
 };
 
 /* ================= 3-часовые K-индексы Алма-Ата из k-index.txt ================= */
-
 let almaChartInstance = null;
 
 function renderAlmaKChart(labels, values) {
@@ -727,8 +726,8 @@ function renderAlmaKChart(labels, values) {
                 borderColor: "#444444",
                 borderWidth: 1,
                 barThickness: "flex",
-                barPercentage: 0.95,      // меньше расстояние
-                categoryPercentage: 1.0,  // плотнее столбцы
+                barPercentage: 0.95,
+                categoryPercentage: 1.0,
                 borderRadius: 0
             }]
         },
@@ -761,7 +760,7 @@ function renderAlmaKChart(labels, values) {
                         autoSkip: false,
                         maxRotation: 0,
                         minRotation: 0,
-                        callback: function(value, index, ticks) {
+                        callback: function (value, index, ticks) {
                             const raw = this.getLabelForValue(value); // "YYYY-MM-DD HH:MM:SS"
                             if (!raw) return "";
                             const [datePart, timePartFull] = raw.split(" ");
@@ -774,11 +773,36 @@ function renderAlmaKChart(labels, values) {
                             const prevDatePart = prevRaw ? prevRaw.split(" ")[0] : null;
 
                             if (prevDatePart === datePart) {
-                                return time;          // та же дата — только время
+                                return time; // та же дата — только время
                             } else {
-                                return formatDateShort(datePart) + "\n" + Время; // новая дата
+                                return formatDateShort(datePart) + "\n" + time; // новая дата
                             }
                         }
+                    },
+                    grid: { display: false },
+                    title: {
+                        display: true,
+                        text: "Время (UT)",
+                        color: "#f0f0f0",
+                        font: { size: 14 }
+                    }
+                }
+            }
+        }
+    });
+
+    if (labels.length) {
+        const lastRaw = labels[labels.length - 1];   // "YYYY-MM-DD HH:MM:SS"
+        const [datePart, timePartFull] = lastRaw.split(" ");
+        const time = timePartFull ? timePartFull.slice(0, 5) : "";
+        document.getElementById("alma-last-update").textContent =
+            formatDateShort(datePart) + " " + time + " UT";
+    } else {
+        document.getElementById("alma-last-update").textContent = "нет данных";
+    }
+}
+
+
                     },
                     grid: { display: false },
                title: {
@@ -874,6 +898,7 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
 
 
 
