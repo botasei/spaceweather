@@ -5,6 +5,7 @@
 <title>Прогноз геомагнитной активности — Институт ионосферы</title>
 
 <style>
+    /* ======== ОБЩИЙ СТИЛЬ, МАТОВЫЙ ЧЁРНЫЙ ======== */
     body {
         margin: 0;
         font-family: Arial, sans-serif;
@@ -181,36 +182,18 @@
         background: #44444a;
     }
 
-    /* ---------- ТАБЛИЦА Kp ---------- */
-    .kp-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12px;
-        color: #f0f0f0;
-    }
-
-    .kp-table th,
-    .kp-table td {
-        border: 1px solid rgba(255,255,255,0.3);
-        padding: 4px 6px;
-        text-align: center;
-    }
-
-    .kp-table th {
-        background: rgba(255,255,255,0.08);
-    }
-
+    /* ---------- ЛЕГЕНДА СОСТОЯНИЙ Kp ---------- */
     .kp-label {
         font-weight: bold;
         text-align: center;
-        margin-bottom: 5px;
+        margin: 6px 0 8px;
         font-size: 13px;
         color: #ffffff;
     }
 
     .legend-block {
-        margin-top: 10px;
-        font-size: 11px;
+        margin-top: 4px;
+        font-size: 12px;
         line-height: 1.4;
         color: #dddddd;
     }
@@ -218,7 +201,7 @@
     .legend-row {
         display: flex;
         align-items: center;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
     }
 
     .legend-color {
@@ -236,12 +219,17 @@
     .kp-red3   { background: #b00000; }
     .kp-red4   { background: #800000; }
 
-    .kp-table .kp-0-1 td { background: rgba(0,176,80,0.25); }
-    .kp-table .kp-2-3 td { background: rgba(0,176,80,0.15); }
-    .kp-table .kp-4   td { background: rgba(255,216,0,0.22); }
-    .kp-table .kp-5-6 td { background: rgba(255,59,59,0.22); }
-    .kp-table .kp-7   td { background: rgba(176,0,0,0.25); }
-    .kp-table .kp-8-9 td { background: rgba(128,0,0,0.30); }
+    /* ---------- Пояснение про UT ---------- */
+    .ut-description {
+        margin-top: 10px;
+        font-size: 12px;
+        line-height: 1.4;
+        color: #cccccc;
+        text-align: left;
+    }
+    .ut-description strong {
+        color: #ffffff;
+    }
 
     /* ---------- РЕЖИМ РЕДАКТИРОВАНИЯ ---------- */
     .admin-toggle {
@@ -363,27 +351,12 @@
                 </div>
             </div>
 
-            <!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ -->
+            <!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + ЛЕГЕНДА -->
             <div class="panel panel-narrow">
                 <h2>Состояние магнитного поля</h2>
                 <small>Kp-index (планетарный индекс)</small>
 
                 <div class="kp-label">Интерпретация значений индекса Kp</div>
-
-                <table class="kp-table">
-                    <tr>
-                        <th>Kp</th>
-                        <th>Состояние магнитного поля</th>
-                    </tr>
-                    <tr class="kp-0-1"><td>0–1</td><td>Спокойное</td></tr>
-                    <tr class="kp-2-3"><td>2–3</td><td>Слабовозмущенное</td></tr>
-                    <tr class="kp-4"><td>4</td><td>Возмущенное</td></tr>
-                    <tr class="kp-5-6"><td>5</td><td>Малая магнитная буря</td></tr>
-                    <tr class="kp-5-6"><td>6</td><td>Умеренная магнитная буря</td></tr>
-                    <tr class="kp-7"><td>7</td><td>Большая магнитная буря</td></tr>
-                    <tr class="kp-8-9"><td>8</td><td>Очень большая магнитная буря</td></tr>
-                    <tr class="kp-8-9"><td>9</td><td>Экстремальная магнитная буря</td></tr>
-                </table>
 
                 <div class="legend-block">
                     <div class="legend-row">
@@ -420,6 +393,12 @@
             <small>Геомагнитная обсерватория «Алма-Ата», Институт ионосферы, Алматы, Казахстан</small>
 
             <canvas id="almaKChart"></canvas>
+
+            <!-- Пояснение про UT -->
+            <div class="ut-description">
+                <p><strong>UT (Universal Time)</strong> — мировое универсальное время, используемое как единый стандарт для указания времени.</p>
+                <p>3-часовые значения K-индекса представлены по мировому универсальному времени (UT).</p>
+            </div>
 
             <div class="export-buttons">
                 <button onclick="downloadPNG('almaKChart','almaata_k3h.png')">PNG</button>
@@ -472,7 +451,7 @@
     </div>
 </div>
 
-<!-- Только Chart.js -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
@@ -489,6 +468,28 @@ function formatNowUtc() {
            d.getUTCFullYear() + " " +
            pad2(d.getUTCHours()) + ":" +
            pad2(d.getUTCMinutes()) + " UT";
+}
+
+/* 6 дат прогноза: сегодня + 0…5 дней, формат DD.MM.YYYY */
+function generateForecastDates() {
+    const today = new Date();
+    const dates = [];
+    for (let i = 0; i < 6; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() + i);
+        dates.push(pad2(d.getDate()) + "." + pad2(d.getMonth() + 1) + "." + d.getFullYear());
+    }
+    return dates;
+}
+
+/* краткий формат даты для подписи под осью X нижнего графика: "21 Nov" */
+function formatDateShort(datePart) {
+    const [yyyy, mm, dd] = datePart.split("-");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mIdx = parseInt(mm, 10) - 1;
+    const day = parseInt(dd, 10);
+    const monthLabel = months[mIdx] || mm;
+    return `${day} ${monthLabel}`;
 }
 
 /* цвет для прогнозного Kp (верхний график) */
@@ -513,7 +514,7 @@ function gfzKColor(kp) {
 /* ================= ПРОГНОЗНЫЙ ГРАФИК KP ================= */
 
 const defaultData = {
-    dates: ["17.11.2025","18.11.2025","19.11.2025","20.11.2025","21.11.2025","22.11.2025"],
+    dates: generateForecastDates(),
     kp:    [1,2,4,6,7,8],
     lastUpdate: "",
     statusText: "Прогноз на ближайшие 6 дней. Данные заполняются ежедневно в лаборатории диагностики и прогноза космической погоды Института ионосферы."
@@ -537,27 +538,35 @@ function saveData(data) {
 
 let kpChartInstance = null;
 
-/* плагин — числа над столбцами только для верхнего графика */
+/* плагин — вывод значений Kp внутри столбцов (верхний график) */
 const valueLabelPlugin = {
     id: "valueLabel",
     afterDatasetsDraw(chart) {
         if (!chart.canvas || chart.canvas.id !== "kpChart") return;
 
         const { ctx } = chart;
+        const dataset = chart.data.datasets[0];
+        const meta = chart.getDatasetMeta(0);
+
         ctx.save();
-        ctx.font = "12px Arial";
+        ctx.font = "bold 16px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
+        ctx.textBaseline = "middle";
 
-        const meta = chart.getDatasetMeta(0);
         meta.data.forEach((bar, index) => {
-            const val = chart.data.datasets[0].data[index];
+            const val = dataset.data[index];
             if (val == null) return;
-            const x = bar.x;
-            const y = bar.y - 3;
-            ctx.fillText(val, x, y);
+
+            const props = bar.getProps(["x", "y", "base"], true);
+            const x = props.x;
+            const y = props.y;
+            const base = props.base;
+            const centerY = y + (base - y) / 2;
+
+            ctx.fillText(val, x, centerY);
         });
+
         ctx.restore();
     }
 };
@@ -649,9 +658,22 @@ function readForm() {
     };
 }
 
+/* автозаполнение дат при открытии режима редактирования */
+function autoFillDates() {
+    const dates = generateForecastDates();
+    for (let i = 0; i < 6; i++) {
+        document.getElementById("date-" + i).value = dates[i];
+    }
+}
+
 document.getElementById("toggle-admin").onclick = () => {
     const p = document.getElementById("admin-panel");
-    p.style.display = (p.style.display === "block" ? "none" : "block");
+    const isOpening = (p.style.display !== "block");
+    p.style.display = isOpening ? "block" : "none";
+
+    if (isOpening) {
+        autoFillDates(); // каждый раз при открытии — актуальные даты
+    }
 };
 
 document.getElementById("btn-save").onclick = () => {
@@ -660,11 +682,18 @@ document.getElementById("btn-save").onclick = () => {
     document.getElementById("form-last-update").value = data.lastUpdate;
     saveData(data);
     renderKpChart(data);
-    alert("Прогноз сохранён.");
+
+    // закрываем панель и перезагружаем страницу
+    document.getElementById("admin-panel").style.display = "none";
+    setTimeout(() => location.reload(), 100);
 };
 
 document.getElementById("btn-reset").onclick = () => {
-    const data = { ...defaultData, lastUpdate: formatNowUtc() };
+    const data = {
+        ...defaultData,
+        dates: generateForecastDates(),
+        lastUpdate: formatNowUtc()
+    };
     saveData(data);
     fillForm(data);
     renderKpChart(data);
@@ -673,21 +702,6 @@ document.getElementById("btn-reset").onclick = () => {
 /* ================= 3-часовые K-индексы Алма-Ата из k-index.txt ================= */
 
 let almaChartInstance = null;
-
-/* формат подписи: "21 Nov\n00:00" */
-function formatKLabel(dtStr) {
-    const [datePart, timePart] = dtStr.split(" ");
-    if (!datePart || !timePart) return dtStr;
-
-    const [yyyy, mm, dd] = datePart.split("-");
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const mIdx = parseInt(mm, 10) - 1;
-    const day = parseInt(dd, 10);
-    const monthLabel = months[mIdx] || mm;
-
-    const time = timePart.slice(0,5); // HH:MM
-    return `${day} ${monthLabel}\n${time}`;
-}
 
 function renderAlmaKChart(labels, values) {
     const ctx = document.getElementById("almaKChart").getContext("2d");
@@ -738,9 +752,22 @@ function renderAlmaKChart(labels, values) {
                         maxRotation: 0,
                         minRotation: 0,
                         callback: function(value, index, ticks) {
-                            // показываем только каждую вторую метку, чтобы ось была “короче”
-                            if (index % 2 !== 0) return "";
-                            return this.getLabelForValue(value);
+                            const raw = this.getLabelForValue(value); // "YYYY-MM-DD HH:MM:SS"
+                            if (!raw) return "";
+                            const [datePart, timePartFull] = raw.split(" ");
+                            const time = timePartFull ? timePartFull.slice(0, 5) : "";
+
+                            if (index === 0) {
+                                return formatDateShort(datePart) + "\n" + time;
+                            }
+                            const prevRaw = this.getLabelForValue(ticks[index - 1].value);
+                            const prevDatePart = prevRaw ? prevRaw.split(" ")[0] : null;
+
+                            if (prevDatePart === datePart) {
+                                return time;          // та же дата — только время
+                            } else {
+                                return formatDateShort(datePart) + "\n" + time; // новая дата
+                            }
                         }
                     },
                     grid: { display: false },
@@ -756,15 +783,18 @@ function renderAlmaKChart(labels, values) {
     });
 
     if (labels.length) {
+        const lastRaw = labels[labels.length - 1];   // "YYYY-MM-DD HH:MM:SS"
+        const [datePart, timePartFull] = lastRaw.split(" ");
+        const time = timePartFull ? timePartFull.slice(0, 5) : "";
         document.getElementById("alma-last-update").textContent =
-            labels[labels.length - 1].replace("\n", " ") + " UT";
+            formatDateShort(datePart) + " " + time + " UT";
     } else {
         document.getElementById("alma-last-update").textContent = "нет данных";
     }
 }
 
-/* Чтение k-index.txt и построение графика
-   Формат файла: "YYYY-MM-DD HH:MM:SS,value" по строкам */
+/* Чтение k-index.txt и построение графика.
+   Формат файла: "YYYY-MM-DD HH:MM:SS,value" по строкам. */
 async function loadAlmaDataFromTxt() {
     try {
         const resp = await fetch("k-index.txt", { cache: "no-store" });
@@ -773,8 +803,8 @@ async function loadAlmaDataFromTxt() {
         const text = await resp.text();
         const lines = text.trim().split(/\r?\n/);
 
-        const labels = [];
-        const values = [];
+        const fullLabels = [];
+        const fullValues = [];
 
         for (const raw of lines) {
             const line = raw.trim();
@@ -787,15 +817,21 @@ async function loadAlmaDataFromTxt() {
             const valStr = parts[1].trim(); // "0", "1", "-1"
             const val = parseFloat(valStr);
 
-            if (isNaN(val) || val < 0) continue; // отрицательные игнорируем
+            if (isNaN(val) || val < 0) continue; // отрицательные игнорируем (-1)
 
-            labels.push(formatKLabel(dtStr));
-            values.push(val);
+            fullLabels.push(dtStr);   // сохраняем оригинальное время
+            fullValues.push(val);
         }
 
-        if (!values.length) {
+        if (!fullValues.length) {
             throw new Error("k-index.txt: нет корректных значений K-индекса");
         }
+
+        // берём только последние 12 точек, чтобы таймлайн был короче
+        const N = 12;
+        const start = Math.max(0, fullLabels.length - N);
+        const labels = fullLabels.slice(start);
+        const values = fullValues.slice(start);
 
         renderAlmaKChart(labels, values);
     } catch (e) {
@@ -828,3 +864,6 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
+
+
