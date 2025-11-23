@@ -329,8 +329,8 @@
         <div class="content-row">
             <!-- ЛЕВАЯ ПАНЕЛЬ: ПРОГНОЗ Kp -->
             <div class="panel panel-wide">
-                <h2>Прогноз геомагнитной активности</h2>
-                <small>Kp-index, Time UT</small>
+                <!-- Заголовок убрали, оставляем только подпись -->
+                <small>Kp-index</small>
 
                 <canvas id="kpChart"></canvas>
 
@@ -396,7 +396,7 @@
 
             <!-- Пояснение про UT -->
             <div class="ut-description">
-                <p><strong>UT (Universal Time)</strong> — мировое универсальное время, используемое как единый стандарт для указания времени.</p>
+                <p><strong>UT (Universal Time)</strong> – мировое универсальное время, используемое как единый стандарт для указания времени.</p>
                 <p>3-часовые значения K-индекса представлены по мировому универсальному времени (UT).</p>
             </div>
 
@@ -717,8 +717,8 @@ function renderAlmaKChart(labels, values) {
                 borderColor: "#444444",
                 borderWidth: 1,
                 barThickness: "flex",
-                barPercentage: 0.8,
-                categoryPercentage: 0.9,
+                barPercentage: 0.95,      // меньше расстояние
+                categoryPercentage: 1.0,  // плотнее столбцы
                 borderRadius: 0
             }]
         },
@@ -864,6 +864,3 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
-
-
-
