@@ -862,7 +862,286 @@ fillForm(initialData);
 renderKpChart(initialData);
 
 loadAlmaDataFromTxt();
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/* ======== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ======== */
+function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+
+function formatDateShort(datePart) {
+    const [yyyy, mm, dd] = datePart.split("-");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mIdx = parseInt(mm, 10) - 1;
+    const day = parseInt(dd, 10);
+    const monthLabel = months[mIdx] || mm;
+    return `${day} ${monthLabel}`;
+}
+
+/* Цвета для прогнозного Kp (верхний график) */
+function kpColor(kp) {
+    if (kp <= 3) return "#00b050";
+    if (kp === 4) return "#ffd800";
+    if (kp === 5) return "#ff3b3b";
+    if (kp === 6) return "#e00000";
+    if (kp === 7) return "#b00000";
+    return "#800000";
+}
+
+/* Цвета в стиле Potsdam для наблюдаемых K (нижний график) */
+function gfzKColor(kp) {
+    if (kp <= 0) return "#0000ff";
+    if (kp <= 3) return "#00ff00";
+    if (kp === 4) return "#ffff00";
+    if (kp <= 6) return "#ff9900";
+    return "#ff0000";
+}
+
+/* ======== ПРОГНОЗНЫЙ ГРАФИК Kp (верхний) ======== */
+let kpChartInstance = null;
+
+const valueLabelPlugin = {
+    id: "valueLabel",
+    afterDatasetsDraw(chart) {
+        if (!chart.canvas || chart.canvas.id !== "kpChart") return;
+        const { ctx } = chart;
+        const dataset = chart.data.datasets[0];
+        const meta = chart.getDatasetMeta(0);
+
+        ctx.save();
+        ctx.font = "bold 16px Arial";
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        meta.data.forEach((bar, index) => {
+            const val = dataset.data[index];
+            if (val == null) return;
+            const props = bar.getProps(["x", "y", "base"], true);
+            const x = props.x;
+            const y = props.y;
+            const base = props.base;
+            const centerY = y + (base - y) / 2;
+            ctx.fillText(val, x, centerY);
+        });
+
+        ctx.restore();
+    }
+};
+Chart.register(valueLabelPlugin);
+
+function renderKpChart(data) {
+    const ctx = document.getElementById("kpChart").getContext("2d");
+    if (kpChartInstance) kpChartInstance.destroy();
+
+    const colors = data.kp.map(kpColor);
+
+    kpChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: data.dates,
+            datasets: [{
+                data: data.kp,
+                backgroundColor: colors,
+                borderColor: "#000000",
+                borderWidth: 1.4,
+                barThickness: "flex",
+                barPercentage: 0.95,
+                categoryPercentage: 0.98,
+                borderRadius: 3
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            layout: { padding: { top: 20, right: 10, left: 0, bottom: 10 } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 9,
+                    ticks: { stepSize: 1, color: "#ffffff", font: { size: 13 } },
+                    grid: { color: "rgba(255,255,255,0.25)" },
+                    title: {
+                        display: true,
+                        text: "Kp-index",
+                        color: "#ffffff",
+                        font: { size: 14 }
+                    }
+                },
+                x: {
+                    ticks: { color: "#ffffff", font: { size: 11 } },
+                    grid: { display: false },
+                    title: {
+                        display: true,
+                        text: "Дата",
+                        color: "#ffffff",
+                        font: { size: 13 }
+                    }
+                }
+            }
+        }
+    });
+
+    document.getElementById("last-update").textContent = data.lastUpdate || "";
+    document.getElementById("status-text").textContent = data.statusText || "Нет данных.";
+}
+
+/* ======== НИЖНИЙ ГРАФИК: 3-часовые K-индексы Алма-Ата ======== */
+let almaChartInstance = null;
+
+function renderAlmaKChart(labels, values) {
+    const ctx = document.getElementById("almaKChart").getContext("2d");
+    if (almaChartInstance) almaChartInstance.destroy();
+
+    almaChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets: [{
+                data: values,
+                backgroundColor: values.map(gfzKColor),
+                borderColor: "#444444",
+                borderWidth: 1,
+                barThickness: "flex",
+                barPercentage: 0.95,
+                categoryPercentage: 1.0,
+                borderRadius: 0
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 9,
+                    ticks: {
+                        stepSize: 1,
+                        color: "#f0f0f0",
+                        font: { size: 13 }
+                    },
+                    grid: { color: "rgba(255,255,255,0.12)" },
+                    title: {
+                        display: true,
+                        text: "K-index",
+                        color: "#f0f0f0",
+                        font: { size: 15 }
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: "#f0f0f0",
+                        font: { size: 14 },
+                        autoSkip: false,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        callback: function (value, index, ticks) {
+                            const raw = this.getLabelForValue(value);
+                            if (!raw) return "";
+                            const [datePart, timePartFull] = raw.split(" ");
+                            const time = timePartFull ? timePartFull.slice(0, 5) : "";
+
+                            if (index === 0) {
+                                return formatDateShort(datePart) + "\n" + time;
+                            }
+                            const prevRaw = this.getLabelForValue(ticks[index - 1].value);
+                            const prevDatePart = prevRaw ? prevRaw.split(" ")[0] : null;
+
+                            return (prevDatePart === datePart)
+                                ? time
+                                : formatDateShort(datePart) + "\n" + time;
+                        }
+                    },
+                    grid: { display: false },
+                    title: {
+                        display: true,
+                        text: "Время (UT)",
+                        color: "#f0f0f0",
+                        font: { size: 14 }
+                    }
+                }
+            }
+        }
+    });
+
+    if (labels.length) {
+        const lastRaw = labels[labels.length - 1];
+        const [datePart, timePartFull] = lastRaw.split(" ");
+        const time = timePartFull ? timePartFull.slice(0, 5) : "";
+        document.getElementById("alma-last-update").textContent =
+            formatDateShort(datePart) + " " + time + " UT";
+    } else {
+        document.getElementById("alma-last-update").textContent = "нет данных";
+    }
+}
+
+/* ======== ЗАГРУЗКА ДАННЫХ И ИНИЦИАЛИЗАЦИЯ ======== */
+
+// прогноз из kp_data.json
+async function loadForecastFromJson() {
+    try {
+        const resp = await fetch("kp_data.json?cache=" + Date.now());
+        const data = await resp.json();   // {dates:[], kp:[], lastUpdate:"", statusText:""}
+        renderKpChart(data);
+    } catch (e) {
+        console.error("Ошибка загрузки kp_data.json:", e);
+    }
+}
+
+// 3-часовые K-индексы из k-index.txt
+async function loadAlmaDataFromTxt() {
+    try {
+        const resp = await fetch("k-index.txt?cache=" + Date.now());
+        if (!resp.ok) throw new Error("Статус: " + resp.status);
+
+        const text = await resp.text();
+        const lines = text.trim().split(/\r?\n/);
+
+        const fullLabels = [];
+        const fullValues = [];
+
+        for (const raw of lines) {
+            const line = raw.trim();
+            if (!line) continue;
+
+            const parts = line.split(",");
+            if (parts.length < 2) continue;
+
+            const dtStr  = parts[0].trim();
+            const valStr = parts[1].trim();
+            const val = parseFloat(valStr);
+
+            if (isNaN(val) || val < 0) continue;
+
+            fullLabels.push(dtStr);
+            fullValues.push(val);
+        }
+
+        const N = 12;
+        const start = Math.max(0, fullLabels.length - N);
+        const labels = fullLabels.slice(start);
+        const values = fullValues.slice(start);
+
+        renderAlmaKChart(labels, values);
+    } catch (e) {
+        console.error("Ошибка загрузки/обработки k-index.txt:", e);
+        document.getElementById("alma-last-update").textContent =
+            "Ошибка загрузки данных";
+    }
+}
+
+// запуск
+loadForecastFromJson();
+loadAlmaDataFromTxt();
+
+function downloadPNG(canvasId, fileName) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = fileName || (canvasId + ".png");
+    link.click();
+}
 </script>
 </body>
 </html>
+
 
