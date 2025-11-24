@@ -340,52 +340,28 @@
                 <div class="last-update">
                     Последнее обновление: <span id="last-update">–</span>
                 </div>
+<!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + ЛЕГЕНДА -->
+<div class="panel panel-narrow">
+    <h2>Состояние магнитного поля</h2>
+    <small>Kp-index (планетарный индекс)</small>
 
-                <div class="status-box">
-                    <h2>Состояние околоземного космического пространства</h2>
-                    <p id="status-text">
-                        Прогноз на ближайшие 6 дней. Данные заполняются ежедневно в лаборатории диагностики
-                        и прогноза космической погоды Института ионосферы.
-                    </p>
-                </div>
-            </div>
+    <div class="kp-label">Интерпретация значений индекса Kp</div>
 
-            <!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + ЛЕГЕНДА -->
-            <div class="panel panel-narrow">
-                <h2>Состояние магнитного поля</h2>
-                <small>Kp-index (планетарный индекс)</small>
+    <div class="legend-block">
+        <!-- строки с цветами и подписями -->
+    </div>
+</div>
 
-                <div class="kp-label">Интерпретация значений индекса Kp</div>
-
-                <div class="legend-block">
-                    <div class="legend-row">
-                        <div class="legend-color kp-low"></div>
-                        Спокойное / слабовозмущенное состояние (Kp = 0–3)
-                    </div>
-                    <div class="legend-row">
-                        <div class="legend-color kp-yellow"></div>
-                        Возмущенное состояние (Kp = 4)
-                    </div>
-                    <div class="legend-row">
-                        <div class="legend-color kp-red1"></div>
-                        Малая магнитная буря (Kp = 5)
-                    </div>
-                    <div class="legend-row">
-                        <div class="legend-color kp-red2"></div>
-                        Умеренная магнитная буря (Kp = 6)
-                    </div>
-                    <div class="legend-row">
-                        <div class="legend-color kp-red3"></div>
-                        Большая магнитная буря (Kp = 7)
-                    </div>
-                    <div class="legend-row">
-                        <div class="legend-color kp-red4"></div>
-                        Очень большая / экстремальная магнитная буря (Kp = 8–9)
-                    </div>
-                </div>
-            </div>
-        </div>
-
+<!-- СРАЗУ ПОД НЕЙ: СОСТОЯНИЕ ОКОЛОЗЕМНОГО КОСМИЧЕСКОГО ПРОСТРАНСТВА -->
+<div class="status-box">
+    <h2>Состояние околоземного космического пространства</h2>
+    <p id="status-text">
+        Прогноз на ближайшие 6 дней. Данные заполняются ежедневно в лаборатории диагностики
+        и прогноза космической погоды Института ионосферы.
+    </p>
+</div>
+</div> <!-- это уже родитель (колонка) -->
+            
         <!-- НИЖНИЙ ГРАФИК: ТЕКУЩИЕ K-ИНДЕКСЫ АЛМА-АТА -->
         <div class="panel panel-bottom">
             <h2>Текущие 3-часовые K-индексы</h2>
@@ -873,6 +849,7 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
 
 
 
