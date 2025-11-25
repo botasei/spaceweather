@@ -519,7 +519,7 @@ function generateForecastDates() {
     return dates;
 }
 
-/* формат даты для подписи оси X нижнего графика: "24.11.25" */
+/* формат даты для подписи: "24.11.25" */
 function formatDateDDMMYY(datePart) {
     const [yyyy, mm, dd] = datePart.split("-");
     return dd + "." + mm + "." + yyyy.slice(-2);
@@ -652,14 +652,14 @@ const daySeparatorPlugin = {
         // подписи дат над графиком, по центру каждых суток
         ctx.save();
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 22px Arial";
+        ctx.font = "bold 20px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
 
         dayGroups.forEach(group => {
             const midIndex = (group.start + group.end) / 2;
             const xMid = xScale.getPixelForValue(midIndex);
-            const dateText = formatDateDDMMYY(group.day);
+            const dateText = formatDateDDMMYY(group.day); // 24.11.25
             const yPos = yScale.top - 8;
             ctx.fillText(dateText, xMid, yPos);
         });
@@ -854,7 +854,7 @@ function renderAlmaKChart(labels, values) {
                     ticks: {
                         stepSize: 1,
                         color: "#f0f0f0",
-                        font: { size: 22 }
+                        font: { family: "Arial", size: 22 }
                     },
                     grid: {
                         color: "rgba(255,255,255,0.12)"
@@ -863,33 +863,24 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "K-index",
                         color: "#f0f0f0",
-                        font: { size: 24 }
+                        font: { family: "Arial", size: 24 }
                     }
                 },
                 x: {
                     ticks: {
                         color: "#f0f0f0",
-                        font: { size: 22 },
+                        font: { family: "Arial", size: 22 },
                         autoSkip: false,
                         maxRotation: 0,
                         minRotation: 0,
-                        callback: function (value, index, ticks) {
+                        // только часы, без даты
+                        callback: function (value) {
                             const raw = this.getLabelForValue(value); // "YYYY-MM-DD HH:MM:SS"
                             if (!raw) return "";
-                            const [datePart, timePartFull] = raw.split(" ");
-                            const time = timePartFull ? timePartFull.slice(0, 5) : "";
-
-                            if (index === 0) {
-                                return time + "\n" + formatDateDDMMYY(datePart);
-                            }
-                            const prevRaw = this.getLabelForValue(ticks[index - 1].value);
-                            const prevDatePart = prevRaw ? prevRaw.split(" ")[0] : null;
-
-                            if (prevDatePart !== datePart) {
-                                return time + "\n" + formatDateDDMMYY(datePart);
-                            } else {
-                                return time;
-                            }
+                            const parts = raw.split(" ");
+                            const timePartFull = parts[1] || "";
+                            const time = timePartFull.slice(0, 5); // "HH:MM"
+                            return time;
                         }
                     },
                     grid: { display: false },
@@ -897,7 +888,7 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "Время (UT)",
                         color: "#f0f0f0",
-                        font: { size: 24 }
+                        font: { family: "Arial", size: 24 }
                     }
                 }
             }
