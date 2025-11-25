@@ -51,14 +51,14 @@
     }
 
     .header-title h1 {
-        font-size: 20px;
+        font-size: 60px; /* было 20px */
         margin: 0;
         letter-spacing: 0.5px;
         color: #ffffff;
     }
 
     .header-title p {
-        font-size: 12px;
+        font-size: 36px; /* было 12px */
         margin: 2px 0 0;
         color: #cccccc;
     }
@@ -75,7 +75,7 @@
 
     .title {
         text-align: center;
-        font-size: 18px;
+        font-size: 54px; /* было 18px */
         margin-bottom: 10px;
         font-weight: bold;
         color: #ffffff;
@@ -113,7 +113,7 @@
 
     .panel h2 {
         margin: 0 0 4px;
-        font-size: 18px;
+        font-size: 54px; /* было 18px */
         text-align: center;
         color: #ffffff;
     }
@@ -121,7 +121,7 @@
     .panel small {
         display: block;
         text-align: left;
-        font-size: 11px;
+        font-size: 33px; /* было 11px */
         margin-bottom: 4px;
         color: #cccccc;
     }
@@ -140,7 +140,7 @@
     }
 
     .last-update {
-        font-size: 11px;
+        font-size: 33px; /* было 11px */
         margin-top: 6px;
         text-align: left;
         color: #cccccc;
@@ -156,14 +156,14 @@
 
     .status-box h2 {
         margin: 0 0 8px;
-        font-size: 15px;
+        font-size: 45px; /* было 15px */
         text-align: center;
         color: #ffffff;
     }
 
     .status-box p {
         margin: 0;
-        font-size: 13px;
+        font-size: 39px; /* было 13px */
         line-height: 1.4;
         text-align: justify;
         color: #dddddd;
@@ -182,7 +182,7 @@
         border-radius: 6px;
         border: 1px solid #777;
         padding: 4px 10px;
-        font-size: 11px;
+        font-size: 33px; /* было 11px */
         cursor: pointer;
     }
 
@@ -195,13 +195,13 @@
         font-weight: bold;
         text-align: center;
         margin: 6px 0 8px;
-        font-size: 13px;
+        font-size: 39px; /* было 13px */
         color: #ffffff;
     }
 
     .legend-block {
         margin-top: 4px;
-        font-size: 12px;
+        font-size: 36px; /* было 12px */
         line-height: 1.4;
         color: #dddddd;
     }
@@ -230,7 +230,7 @@
     /* ---------- Пояснение про UT ---------- */
     .ut-description {
         margin-top: 10px;
-        font-size: 12px;
+        font-size: 36px; /* было 12px */
         line-height: 1.4;
         color: #cccccc;
         text-align: left;
@@ -252,7 +252,7 @@
         border-radius: 6px;
         border: 1px solid #777;
         padding: 4px 10px;
-        font-size: 11px;
+        font-size: 33px; /* было 11px */
         cursor: pointer;
     }
 
@@ -263,7 +263,7 @@
         background: #050608;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.18);
-        font-size: 12px;
+        font-size: 36px; /* было 12px */
         display: none;
         color: #f0f0f0;
     }
@@ -281,7 +281,7 @@
         border-radius: 5px;
         border: 1px solid #ccc;
         padding: 5px;
-        font-size: 12px;
+        font-size: 36px; /* было 12px */
         background: #0c0f13;
         color: #f0f0f0;
     }
@@ -568,7 +568,7 @@ const valueLabelPlugin = {
         const meta = chart.getDatasetMeta(0);
 
         ctx.save();
-        ctx.font = "bold 16px Arial";
+        ctx.font = "bold 48px Arial";  // было 16px
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -621,23 +621,30 @@ function renderKpChart(data) {
                 y: {
                     beginAtZero: true,
                     max: 9,
-                    ticks: { stepSize: 1, color: "#ffffff", font: { size: 13 } },
+                    ticks: { 
+                        stepSize: 1, 
+                        color: "#ffffff", 
+                        font: { size: 39 } /* было 13 */
+                    },
                     grid: { color: "rgba(255,255,255,0.25)" },
                     title: {
                         display: true,
                         text: "Kp-index",
                         color: "#ffffff",
-                        font: { size: 14 }
+                        font: { size: 42 } /* было 14 */
                     }
                 },
                 x: {
-                    ticks: { color: "#ffffff", font: { size: 11 } },
+                    ticks: { 
+                        color: "#ffffff", 
+                        font: { size: 33 } /* было 11 */
+                    },
                     grid: { display: false },
                     title: {
                         display: true,
                         text: "Дата",
                         color: "#ffffff",
-                        font: { size: 13 }
+                        font: { size: 39 } /* было 13 */
                     }
                 }
             }
@@ -750,7 +757,7 @@ function renderAlmaKChart(labels, values) {
                     ticks: {
                         stepSize: 1,
                         color: "#f0f0f0",
-                        font: { size: 13 }
+                        font: { size: 39 } /* было 13 */
                     },
                     grid: {
                         color: "rgba(255,255,255,0.12)"
@@ -759,13 +766,13 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "K-index",
                         color: "#f0f0f0",
-                        font: { size: 15 }
+                        font: { size: 45 } /* было 15 */
                     }
                 },
                 x: {
                     ticks: {
                         color: "#f0f0f0",
-                        font: { size: 14 },
+                        font: { size: 42 }, /* было 14 */
                         autoSkip: false,
                         maxRotation: 0,
                         minRotation: 0,
@@ -793,7 +800,7 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "Время (UT)",
                         color: "#f0f0f0",
-                        font: { size: 14 }
+                        font: { size: 42 } /* было 14 */
                     }
                 }
             }
