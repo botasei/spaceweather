@@ -5,12 +5,17 @@
 <title>Прогноз геомагнитной активности — Институт ионосферы</title>
 
 <style>
+    :root {
+        --page-max-width: 1700px;
+    }
+
     /* ======== ОБЩИЙ СТИЛЬ, МАТОВЫЙ ЧЁРНЫЙ ======== */
     body {
         margin: 0;
         font-family: Arial, sans-serif;
         color: #f0f0f0;
         background-color: #050608; /* мягкий матовый чёрный */
+        font-size: 18px;           /* базовый крупный шрифт */
     }
 
     .page-wrapper {
@@ -25,12 +30,14 @@
 
     /* ---------- ШАПКА ---------- */
     .header {
-        width: 1400px;
+        width: 90vw;
+        max-width: var(--page-max-width);
         margin: 0 auto;
         padding: 15px 0 10px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        box-sizing: border-box;
     }
 
     .logo-group {
@@ -40,7 +47,7 @@
     }
 
     .logo-group img {
-        height: 80px;
+        height: 90px;
         object-fit: contain;
     }
 
@@ -51,7 +58,7 @@
     }
 
     .header-title h1 {
-        font-size: 40px;
+        font-size: 52px;
         margin: 0;
         letter-spacing: 0.5px;
         color: #ffffff;
@@ -59,26 +66,27 @@
     }
 
     .header-title p {
-        font-size: 22px;
-        margin: 8px 0 0;
+        font-size: 26px;
+        margin: 10px 0 0;
         color: #cccccc;
     }
 
     /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
     .main-wrapper {
-        width: 1400px;
+        width: 90vw;
+        max-width: var(--page-max-width);
         margin: 0 auto;
         background: #07090c;
         border-radius: 10px;
-        padding: 20px 24px 24px;
+        padding: 22px 26px 26px;
         border: 1px solid rgba(255,255,255,0.15);
         box-sizing: border-box;
     }
 
     .title {
         text-align: center;
-        font-size: 32px;
-        margin-bottom: 18px;
+        font-size: 40px;
+        margin-bottom: 22px;
         font-weight: bold;
         color: #ffffff;
     }
@@ -87,18 +95,18 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        gap: 20px;
+        gap: 22px;
     }
 
     .panel {
         background: #050608;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.18);
-        padding: 18px;
+        padding: 20px;
         box-sizing: border-box;
     }
 
-    /* левая колонка с графиком — главная */
+    /* левая панель с графиком — основная */
     .panel-wide {
         flex: 1.6;
     }
@@ -107,18 +115,18 @@
     .right-column {
         display: flex;
         flex-direction: column;
-        gap: 14px;
-        flex: 1.2;   /* она уже, чем левая */
+        gap: 16px;
+        flex: 1.2;
     }
 
     .panel-bottom {
         width: 100%;
-        margin-top: 26px;
+        margin-top: 28px;
     }
 
     .panel h2 {
-        margin: 0 0 6px;
-        font-size: 26px;
+        margin: 0 0 8px;
+        font-size: 32px;
         text-align: center;
         color: #ffffff;
     }
@@ -126,56 +134,56 @@
     .panel small {
         display: block;
         text-align: left;
-        font-size: 18px;
-        margin-bottom: 6px;
+        font-size: 22px;
+        margin-bottom: 8px;
         color: #cccccc;
     }
 
     /* ---------- ГРАФИКИ ---------- */
     #kpChart {
         width: 100%;
-        height: 520px !important;
+        height: 580px !important;
         background-color: #050608;
     }
 
     #almaKChart {
         width: 100%;
-        height: 320px !important;
+        height: 360px !important;
         background-color: #050608;
     }
 
     .last-update {
-        font-size: 16px;
-        margin-top: 8px;
+        font-size: 20px;
+        margin-top: 10px;
         text-align: left;
         color: #cccccc;
     }
 
     .status-box {
         margin-top: 0;
-        padding: 16px 18px;
+        padding: 18px 20px;
         border-radius: 10px;
         background: #050608;
         border: 1px solid rgba(255,255,255,0.2);
     }
 
     .status-box h2 {
-        margin: 0 0 10px;
-        font-size: 26px;
+        margin: 0 0 12px;
+        font-size: 32px;
         text-align: center;
         color: #ffffff;
     }
 
     .status-box p {
         margin: 0;
-        font-size: 18px;
-        line-height: 1.5;
+        font-size: 22px;
+        line-height: 1.6;
         text-align: justify;
         color: #dddddd;
     }
 
     .export-buttons {
-        margin-top: 8px;
+        margin-top: 10px;
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
@@ -186,8 +194,8 @@
         color: #ffffff;
         border-radius: 6px;
         border: 1px solid #777;
-        padding: 6px 14px;
-        font-size: 16px;
+        padding: 6px 16px;
+        font-size: 18px;
         cursor: pointer;
     }
 
@@ -199,15 +207,15 @@
     .kp-label {
         font-weight: bold;
         text-align: center;
-        margin: 8px 0 10px;
-        font-size: 20px;
+        margin: 10px 0 12px;
+        font-size: 24px;
         color: #ffffff;
     }
 
     .legend-block {
         margin-top: 4px;
-        font-size: 18px;
-        line-height: 1.5;
+        font-size: 22px;
+        line-height: 1.6;
         color: #dddddd;
     }
 
@@ -218,10 +226,10 @@
     }
 
     .legend-color {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
         border: 1px solid #000;
-        margin-right: 8px;
+        margin-right: 10px;
         border-radius: 3px;
     }
 
@@ -234,9 +242,9 @@
 
     /* ---------- Пояснение про UT ---------- */
     .ut-description {
-        margin-top: 10px;
-        font-size: 18px;
-        line-height: 1.5;
+        margin-top: 12px;
+        font-size: 22px;
+        line-height: 1.6;
         color: #cccccc;
         text-align: left;
     }
@@ -246,9 +254,11 @@
 
     /* ---------- РЕЖИМ РЕДАКТИРОВАНИЯ ---------- */
     .admin-toggle {
-        width: 1400px;
-        margin-top: 10px;
+        width: 90vw;
+        max-width: var(--page-max-width);
+        margin-top: 12px;
         text-align: right;
+        box-sizing: border-box;
     }
 
     .admin-toggle button {
@@ -256,19 +266,20 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #777;
-        padding: 6px 14px;
-        font-size: 16px;
+        padding: 6px 16px;
+        font-size: 18px;
         cursor: pointer;
     }
 
     .admin-panel {
-        width: 1400px;
-        margin: 12px auto 18px;
+        width: 90vw;
+        max-width: var(--page-max-width);
+        margin: 14px auto 20px;
         padding: 18px 22px;
         background: #050608;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.18);
-        font-size: 16px;
+        font-size: 18px;
         display: none;
         color: #f0f0f0;
         box-sizing: border-box;
@@ -287,7 +298,7 @@
         border-radius: 5px;
         border: 1px solid #ccc;
         padding: 6px;
-        font-size: 16px;
+        font-size: 18px;
         background: #0c0f13;
         color: #f0f0f0;
         box-sizing: border-box;
@@ -298,7 +309,7 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #0b7c2f;
-        padding: 6px 14px;
+        padding: 6px 16px;
         cursor: pointer;
     }
 
@@ -307,7 +318,7 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #8b0000;
-        padding: 6px 14px;
+        padding: 6px 16px;
         cursor: pointer;
         margin-right: 8px;
     }
@@ -571,7 +582,7 @@ const valueLabelPlugin = {
         const meta = chart.getDatasetMeta(0);
 
         ctx.save();
-        ctx.font = "bold 20px Arial";
+        ctx.font = "bold 24px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -619,7 +630,7 @@ const daySeparatorPlugin = {
                 currentDay = day;
                 startIndex = i;
 
-                // вертикальный разделитель в начале новых суток (кроме самого первого)
+                // вертикальный разделитель в начале новых суток (кроме первого)
                 if (i > 0) {
                     const x = xScale.getPixelForValue(i);
                     ctx.save();
@@ -641,7 +652,7 @@ const daySeparatorPlugin = {
         // подписи дат над графиком, по центру каждых суток
         ctx.save();
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 18px Arial";
+        ctx.font = "bold 22px Arial";
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
 
@@ -649,7 +660,7 @@ const daySeparatorPlugin = {
             const midIndex = (group.start + group.end) / 2;
             const xMid = xScale.getPixelForValue(midIndex);
             const dateText = formatDateDDMMYY(group.day);
-            const yPos = yScale.top - 6;
+            const yPos = yScale.top - 8;
             ctx.fillText(dateText, xMid, yPos);
         });
 
@@ -683,7 +694,7 @@ function renderKpChart(data) {
         options: {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            layout: { padding: { top: 20, right: 20, left: 10, bottom: 10 } },
+            layout: { padding: { top: 24, right: 24, left: 12, bottom: 14 } },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -691,27 +702,27 @@ function renderKpChart(data) {
                     ticks: {
                         stepSize: 1,
                         color: "#ffffff",
-                        font: { size: 18 }
+                        font: { size: 22 }
                     },
                     grid: { color: "rgba(255,255,255,0.25)" },
                     title: {
                         display: true,
                         text: "Kp-index",
                         color: "#ffffff",
-                        font: { size: 18 }
+                        font: { size: 24 }
                     }
                 },
                 x: {
                     ticks: {
                         color: "#ffffff",
-                        font: { size: 16 }
+                        font: { size: 22 }
                     },
                     grid: { display: false },
                     title: {
                         display: true,
                         text: "Дата",
                         color: "#ffffff",
-                        font: { size: 18 }
+                        font: { size: 24 }
                     }
                 }
             }
@@ -835,7 +846,7 @@ function renderAlmaKChart(labels, values) {
         options: {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            layout: { padding: { top: 34, right: 20, left: 10, bottom: 10 } },
+            layout: { padding: { top: 36, right: 24, left: 12, bottom: 16 } },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -843,7 +854,7 @@ function renderAlmaKChart(labels, values) {
                     ticks: {
                         stepSize: 1,
                         color: "#f0f0f0",
-                        font: { size: 18 }
+                        font: { size: 22 }
                     },
                     grid: {
                         color: "rgba(255,255,255,0.12)"
@@ -852,13 +863,13 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "K-index",
                         color: "#f0f0f0",
-                        font: { size: 18 }
+                        font: { size: 24 }
                     }
                 },
                 x: {
                     ticks: {
                         color: "#f0f0f0",
-                        font: { size: 16 },
+                        font: { size: 22 },
                         autoSkip: false,
                         maxRotation: 0,
                         minRotation: 0,
@@ -886,7 +897,7 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "Время (UT)",
                         color: "#f0f0f0",
-                        font: { size: 18 }
+                        font: { size: 24 }
                     }
                 }
             }
@@ -975,5 +986,3 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
-
-
