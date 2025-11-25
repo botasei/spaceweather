@@ -25,7 +25,7 @@
 
     /* ---------- ШАПКА ---------- */
     .header {
-        width: 1100px;
+        width: 1400px;            /* было 1100px */
         margin: 0 auto;
         padding: 15px 0 10px;
         display: flex;
@@ -40,7 +40,7 @@
     }
 
     .logo-group img {
-        height: 75px;
+        height: 80px;
         object-fit: contain;
     }
 
@@ -51,32 +51,33 @@
     }
 
     .header-title h1 {
-        font-size: 50px;
+        font-size: 40px;
         margin: 0;
         letter-spacing: 0.5px;
         color: #ffffff;
+        line-height: 1.25;
     }
 
     .header-title p {
-        font-size: 30px;
-        margin: 2px 0 0;
+        font-size: 22px;
+        margin: 8px 0 0;
         color: #cccccc;
     }
 
     /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
     .main-wrapper {
-        width: 1100px;
+        width: 1400px;            /* было 1100px */
         margin: 0 auto;
         background: #07090c;
         border-radius: 10px;
-        padding: 15px 20px 20px;
+        padding: 20px 24px 24px;
         border: 1px solid rgba(255,255,255,0.15);
     }
 
     .title {
         text-align: center;
-        font-size: 45px;
-        margin-bottom: 10px;
+        font-size: 32px;
+        margin-bottom: 18px;
         font-weight: bold;
         color: #ffffff;
     }
@@ -85,35 +86,35 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
-        gap: 16px;
+        gap: 20px;
     }
 
     .panel {
         background: #050608;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.18);
-        padding: 15px;
+        padding: 18px;
+        box-sizing: border-box;
     }
 
-    .panel-wide   { flex: 1.6; }
-    .panel-narrow { width: 100%; }
+    .panel-wide   { flex: 2; }
+    .panel-narrow { flex: 1.2; }
 
     /* правая колонка: магнитное поле + состояние ОКП */
     .right-column {
         display: flex;
         flex-direction: column;
-        flex: 1.0;
-        gap: 10px;
+        gap: 14px;
     }
 
     .panel-bottom {
         width: 100%;
-        margin-top: 24px;
+        margin-top: 26px;
     }
 
     .panel h2 {
-        margin: 0 0 4px;
-        font-size: 45px;
+        margin: 0 0 6px;
+        font-size: 26px;
         text-align: center;
         color: #ffffff;
     }
@@ -121,58 +122,58 @@
     .panel small {
         display: block;
         text-align: left;
-        font-size: 28px;
-        margin-bottom: 4px;
+        font-size: 18px;
+        margin-bottom: 6px;
         color: #cccccc;
     }
 
     /* ---------- ГРАФИКИ ---------- */
     #kpChart {
         width: 100%;
-        height: 480px !important;
+        height: 520px !important;   /* выше и шире */
         background-color: #050608;
     }
 
     #almaKChart {
         width: 100%;
-        height: 260px !important;
+        height: 320px !important;
         background-color: #050608;
     }
 
     .last-update {
-        font-size: 28px;
-        margin-top: 6px;
+        font-size: 16px;
+        margin-top: 8px;
         text-align: left;
         color: #cccccc;
     }
 
     .status-box {
         margin-top: 0;
-        padding: 14px 16px;
+        padding: 16px 18px;
         border-radius: 10px;
         background: #050608;
         border: 1px solid rgba(255,255,255,0.2);
     }
 
     .status-box h2 {
-        margin: 0 0 8px;
-        font-size: 38px;
+        margin: 0 0 10px;
+        font-size: 26px;
         text-align: center;
         color: #ffffff;
     }
 
     .status-box p {
         margin: 0;
-        font-size: 32px;
-        line-height: 1.4;
+        font-size: 18px;
+        line-height: 1.5;
         text-align: justify;
         color: #dddddd;
     }
 
     .export-buttons {
-        margin-top: 6px;
+        margin-top: 8px;
         display: flex;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
     }
 
@@ -181,8 +182,8 @@
         color: #ffffff;
         border-radius: 6px;
         border: 1px solid #777;
-        padding: 4px 10px;
-        font-size: 28px;
+        padding: 6px 14px;
+        font-size: 16px;
         cursor: pointer;
     }
 
@@ -194,15 +195,15 @@
     .kp-label {
         font-weight: bold;
         text-align: center;
-        margin: 6px 0 8px;
-        font-size: 32px;
+        margin: 8px 0 10px;
+        font-size: 20px;
         color: #ffffff;
     }
 
     .legend-block {
         margin-top: 4px;
-        font-size: 30px;
-        line-height: 1.4;
+        font-size: 18px;
+        line-height: 1.5;
         color: #dddddd;
     }
 
@@ -216,7 +217,7 @@
         width: 16px;
         height: 16px;
         border: 1px solid #000;
-        margin-right: 6px;
+        margin-right: 8px;
         border-radius: 3px;
     }
 
@@ -230,8 +231,8 @@
     /* ---------- Пояснение про UT ---------- */
     .ut-description {
         margin-top: 10px;
-        font-size: 30px;
-        line-height: 1.4;
+        font-size: 18px;
+        line-height: 1.5;
         color: #cccccc;
         text-align: left;
     }
@@ -241,8 +242,8 @@
 
     /* ---------- РЕЖИМ РЕДАКТИРОВАНИЯ ---------- */
     .admin-toggle {
-        width: 1100px;
-        margin-top: 8px;
+        width: 1400px;            /* ширина под основную */
+        margin-top: 10px;
         text-align: right;
     }
 
@@ -251,28 +252,29 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #777;
-        padding: 4px 10px;
-        font-size: 28px;
+        padding: 6px 14px;
+        font-size: 16px;
         cursor: pointer;
     }
 
     .admin-panel {
-        width: 1100px;
-        margin: 10px auto 15px;
-        padding: 15px 20px;
+        width: 1400px;
+        margin: 12px auto 18px;
+        padding: 18px 22px;
         background: #050608;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,0.18);
-        font-size: 30px;
+        font-size: 16px;
         display: none;
         color: #f0f0f0;
+        box-sizing: border-box;
     }
 
     .admin-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 10px 15px;
-        margin-bottom: 10px;
+        gap: 10px 18px;
+        margin-bottom: 12px;
     }
 
     .admin-panel input,
@@ -280,10 +282,11 @@
         width: 100%;
         border-radius: 5px;
         border: 1px solid #ccc;
-        padding: 5px;
-        font-size: 30px;
+        padding: 6px;
+        font-size: 16px;
         background: #0c0f13;
         color: #f0f0f0;
+        box-sizing: border-box;
     }
 
     .btn-save {
@@ -291,7 +294,7 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #0b7c2f;
-        padding: 4px 10px;
+        padding: 6px 14px;
         cursor: pointer;
     }
 
@@ -300,7 +303,7 @@
         color: #fff;
         border-radius: 6px;
         border: 1px solid #8b0000;
-        padding: 4px 10px;
+        padding: 6px 14px;
         cursor: pointer;
         margin-right: 8px;
     }
@@ -484,7 +487,7 @@ function formatNowUtc() {
     const d = new Date();
     return pad2(d.getUTCDate()) + "." +
            pad2(d.getUTCMonth() + 1) + "." +
-           d.getUTCFullYear() + " " +
+           d.getFullYear() + " " +
            pad2(d.getUTCHours()) + ":" +
            pad2(d.getUTCMinutes()) + " UT";
 }
@@ -501,14 +504,10 @@ function generateForecastDates() {
     return dates;
 }
 
-/* формат даты для подписи оси X нижнего графика: "21 Nov" */
-function formatDateShort(datePart) {
+/* формат даты для подписи оси X нижнего графика: "24.11.25" */
+function formatDateDDMMYY(datePart) {
     const [yyyy, mm, dd] = datePart.split("-");
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    const mIdx = parseInt(mm, 10) - 1;
-    const day = parseInt(dd, 10);
-    const monthLabel = months[mIdx] || mm;
-    return `${day} ${monthLabel}`;
+    return dd + "." + mm + "." + yyyy.slice(-2);
 }
 
 /* цвет для прогнозного Kp (верхний график) */
@@ -568,7 +567,7 @@ const valueLabelPlugin = {
         const meta = chart.getDatasetMeta(0);
 
         ctx.save();
-        ctx.font = "bold 40px Arial";
+        ctx.font = "bold 20px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -590,7 +589,71 @@ const valueLabelPlugin = {
     }
 };
 
-Chart.register(valueLabelPlugin);
+/* плагин — вертикальные разделители суток и дата над графиком для ALMA */
+const daySeparatorPlugin = {
+    id: "daySeparator",
+    afterDraw(chart) {
+        if (!chart.canvas || chart.canvas.id !== "almaKChart") return;
+
+        const labels = chart.data.labels;
+        if (!labels || !labels.length) return;
+
+        const xScale = chart.scales.x;
+        const yScale = chart.scales.y;
+        const ctx = chart.ctx;
+
+        const dayGroups = [];
+        let currentDay = null;
+        let startIndex = 0;
+
+        labels.forEach((lab, i) => {
+            const day = lab.split(" ")[0]; // "YYYY-MM-DD"
+            if (day !== currentDay) {
+                if (currentDay !== null) {
+                    dayGroups.push({ day: currentDay, start: startIndex, end: i - 1 });
+                }
+                currentDay = day;
+                startIndex = i;
+
+                // вертикальный разделитель в начале новых суток (кроме самого первого)
+                if (i > 0) {
+                    const x = xScale.getPixelForValue(i);
+                    ctx.save();
+                    ctx.strokeStyle = "rgba(255,255,255,0.5)";
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(x, yScale.top);
+                    ctx.lineTo(x, yScale.bottom);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+        });
+        if (currentDay !== null) {
+            dayGroups.push({ day: currentDay, start: startIndex, end: labels.length - 1 });
+        }
+
+        // подписи дат над графиком, по центру каждых суток
+        ctx.save();
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 18px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+
+        dayGroups.forEach(group => {
+            const midIndex = (group.start + group.end) / 2;
+            const xMid = xScale.getPixelForValue(midIndex);
+            const dateText = formatDateDDMMYY(group.day);
+            const yPos = yScale.top - 6;
+            ctx.fillText(dateText, xMid, yPos);
+        });
+
+        ctx.restore();
+    }
+};
+
+Chart.register(valueLabelPlugin, daySeparatorPlugin);
 
 function renderKpChart(data) {
     const ctx = document.getElementById("kpChart").getContext("2d");
@@ -608,7 +671,7 @@ function renderKpChart(data) {
                 borderColor: "#000000",
                 borderWidth: 1.4,
                 barThickness: "flex",
-                barPercentage: 0.95,
+                barPercentage: 0.9,
                 categoryPercentage: 0.98,
                 borderRadius: 3
             }]
@@ -616,35 +679,35 @@ function renderKpChart(data) {
         options: {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            layout: { padding: { top: 20, right: 10, left: 0, bottom: 10 } },
+            layout: { padding: { top: 20, right: 20, left: 10, bottom: 10 } },
             scales: {
                 y: {
                     beginAtZero: true,
                     max: 9,
-                    ticks: { 
-                        stepSize: 1, 
-                        color: "#ffffff", 
-                        font: { size: 32 }
+                    ticks: {
+                        stepSize: 1,
+                        color: "#ffffff",
+                        font: { size: 18 }
                     },
                     grid: { color: "rgba(255,255,255,0.25)" },
                     title: {
                         display: true,
                         text: "Kp-index",
                         color: "#ffffff",
-                        font: { size: 35 }
+                        font: { size: 18 }
                     }
                 },
                 x: {
-                    ticks: { 
-                        color: "#ffffff", 
-                        font: { size: 28 }
+                    ticks: {
+                        color: "#ffffff",
+                        font: { size: 16 }
                     },
                     grid: { display: false },
                     title: {
                         display: true,
                         text: "Дата",
                         color: "#ffffff",
-                        font: { size: 32 }
+                        font: { size: 18 }
                     }
                 }
             }
@@ -739,10 +802,28 @@ function renderAlmaKChart(labels, values) {
             datasets: [{
                 data: values,
                 backgroundColor: values.map(gfzKColor),
-                borderColor: "#444444",
-                borderWidth: 1,
+                borderColor: function(context) {
+                    const index = context.dataIndex;
+                    const labels = context.chart.data.labels;
+                    const baseColor = "#444444";
+                    if (!labels || index === 0) return baseColor;
+                    const day = labels[index].split(" ")[0];
+                    const prevDay = labels[index - 1].split(" ")[0];
+                    return (day !== prevDay) ? "#ffffff" : baseColor;
+                },
+                borderWidth: function(context) {
+                    const index = context.dataIndex;
+                    const labels = context.chart.data.labels;
+                    if (!labels || index === 0) return 1;
+                    const day = labels[index].split(" ")[0];
+                    const prevDay = labels[index - 1].split(" ")[0];
+                    if (day !== prevDay) {
+                        return { left: 3, top: 1, right: 1, bottom: 1 };
+                    }
+                    return 1;
+                },
                 barThickness: "flex",
-                barPercentage: 0.95,
+                barPercentage: 0.9,
                 categoryPercentage: 1.0,
                 borderRadius: 0
             }]
@@ -750,6 +831,7 @@ function renderAlmaKChart(labels, values) {
         options: {
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
+            layout: { padding: { top: 34, right: 20, left: 10, bottom: 10 } },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -757,7 +839,7 @@ function renderAlmaKChart(labels, values) {
                     ticks: {
                         stepSize: 1,
                         color: "#f0f0f0",
-                        font: { size: 32 }
+                        font: { size: 18 }
                     },
                     grid: {
                         color: "rgba(255,255,255,0.12)"
@@ -766,13 +848,13 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "K-index",
                         color: "#f0f0f0",
-                        font: { size: 35 }
+                        font: { size: 18 }
                     }
                 },
                 x: {
                     ticks: {
                         color: "#f0f0f0",
-                        font: { size: 34 },
+                        font: { size: 16 },
                         autoSkip: false,
                         maxRotation: 0,
                         minRotation: 0,
@@ -783,15 +865,15 @@ function renderAlmaKChart(labels, values) {
                             const time = timePartFull ? timePartFull.slice(0, 5) : "";
 
                             if (index === 0) {
-                                return formatDateShort(datePart) + "\n" + time;
+                                return time + "\n" + formatDateDDMMYY(datePart);
                             }
                             const prevRaw = this.getLabelForValue(ticks[index - 1].value);
                             const prevDatePart = prevRaw ? prevRaw.split(" ")[0] : null;
 
-                            if (prevDatePart === datePart) {
-                                return time; // та же дата — только время
+                            if (prevDatePart !== datePart) {
+                                return time + "\n" + formatDateDDMMYY(datePart);
                             } else {
-                                return formatDateShort(datePart) + "\n" + time; // новая дата
+                                return time;
                             }
                         }
                     },
@@ -800,7 +882,7 @@ function renderAlmaKChart(labels, values) {
                         display: true,
                         text: "Время (UT)",
                         color: "#f0f0f0",
-                        font: { size: 34 }
+                        font: { size: 18 }
                     }
                 }
             }
@@ -812,7 +894,7 @@ function renderAlmaKChart(labels, values) {
         const [datePart, timePartFull] = lastRaw.split(" ");
         const time = timePartFull ? timePartFull.slice(0, 5) : "";
         document.getElementById("alma-last-update").textContent =
-            formatDateShort(datePart) + " " + time + " UT";
+            formatDateDDMMYY(datePart) + " " + time + " UT";
     } else {
         document.getElementById("alma-last-update").textContent = "нет данных";
     }
