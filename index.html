@@ -25,7 +25,7 @@
 
     /* ---------- ШАПКА ---------- */
     .header {
-        width: 1400px;            /* было 1100px */
+        width: 1400px;
         margin: 0 auto;
         padding: 15px 0 10px;
         display: flex;
@@ -66,12 +66,13 @@
 
     /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
     .main-wrapper {
-        width: 1400px;            /* было 1100px */
+        width: 1400px;
         margin: 0 auto;
         background: #07090c;
         border-radius: 10px;
         padding: 20px 24px 24px;
         border: 1px solid rgba(255,255,255,0.15);
+        box-sizing: border-box;
     }
 
     .title {
@@ -97,14 +98,17 @@
         box-sizing: border-box;
     }
 
-    .panel-wide   { flex: 2; }
-    .panel-narrow { flex: 1.2; }
+    /* левая колонка с графиком — главная */
+    .panel-wide {
+        flex: 1.6;
+    }
 
-    /* правая колонка: магнитное поле + состояние ОКП */
+    /* правая колонка — легенда и текст */
     .right-column {
         display: flex;
         flex-direction: column;
         gap: 14px;
+        flex: 1.2;   /* она уже, чем левая */
     }
 
     .panel-bottom {
@@ -130,7 +134,7 @@
     /* ---------- ГРАФИКИ ---------- */
     #kpChart {
         width: 100%;
-        height: 520px !important;   /* выше и шире */
+        height: 520px !important;
         background-color: #050608;
     }
 
@@ -242,7 +246,7 @@
 
     /* ---------- РЕЖИМ РЕДАКТИРОВАНИЯ ---------- */
     .admin-toggle {
-        width: 1400px;            /* ширина под основную */
+        width: 1400px;
         margin-top: 10px;
         text-align: right;
     }
@@ -356,7 +360,7 @@
             <!-- ПРАВАЯ КОЛОНКА: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + СОСТОЯНИЕ ОКП -->
             <div class="right-column">
                 <!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + ЛЕГЕНДА -->
-                <div class="panel panel-narrow">
+                <div class="panel">
                     <h2>Состояние магнитного поля</h2>
                     <small>Kp-index (планетарный индекс)</small>
 
@@ -971,3 +975,5 @@ loadAlmaDataFromTxt();   // первая загрузка k-index.txt
 </script>
 </body>
 </html>
+
+
