@@ -5,951 +5,288 @@
 <title>Прогноз геомагнитной активности — Институт ионосферы</title>
 
 <style>
-    :root {
-        --page-max-width: 1700px;
-    }
+:root {
+    --page-max-width: 1700px;
+}
 
-    /* ======== ОБЩИЙ СТИЛЬ + ФОН (КАРТИНКА) ======== */
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        color: #f0f0f0;
-        font-size: 18px;
+/* ================= ФОН ================= */
 
-        /* Фон-картинка (положи background_sun.jpg рядом с этим HTML) */
-        background-image: url("background_sun.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #f0f0f0;
+    font-size: 18px;
 
-    /* Затемнение, чтобы текст/графики читались */
-    body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.55);
-        z-index: -1;
-    }
+    background-image: url("background_sun.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
 
-    .page-wrapper {
-        min-height: 100vh;
-        padding-bottom: 40px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 10px;
+/* мягкое затемнение для читаемости */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: -1;
+}
 
-        /* важно для правильного слоя поверх фона */
-        position: relative;
-        z-index: 1;
-    }
+/* ================= ОСНОВА ================= */
 
-    /* ---------- ШАПКА ---------- */
-    .header {
-        width: 90vw;
-        max-width: var(--page-max-width);
-        margin: 0 auto;
-        padding: 15px 0 10px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-sizing: border-box;
+.page-wrapper {
+    min-height: 100vh;
+    padding: 10px 0 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
 
-        /* чуть затемним шапку для контраста */
-        background: rgba(5, 6, 8, 0.45);
-        border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 10px;
-        padding-left: 18px;
-        padding-right: 18px;
-        backdrop-filter: blur(2px);
-    }
+/* ================= GLASS EFFECT ================= */
 
-    .logo-group {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.header,
+.main-wrapper,
+.panel,
+.status-box,
+.admin-panel {
 
-    .logo-group img {
-        height: 90px;
-        object-fit: contain;
-    }
+    background: rgba(10,15,25,0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
-    .header-title {
-        text-align: center;
-        flex: 1;
-        padding: 0 20px;
-    }
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 12px;
+}
 
-    .header-title h1 {
-        font-size: 52px;
-        margin: 0;
-        letter-spacing: 0.5px;
-        color: #ffffff;
-        line-height: 1.25;
-    }
+/* ================= ШАПКА ================= */
 
-    .header-title p {
-        font-size: 26px;
-        margin: 10px 0 0;
-        color: #cccccc;
-    }
+.header {
+    width: 90vw;
+    max-width: var(--page-max-width);
+    padding: 20px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
-    .main-wrapper {
-        width: 90vw;
-        max-width: var(--page-max-width);
-        margin: 14px auto 0;
-        background: rgba(7, 9, 12, 0.92);
-        border-radius: 10px;
-        padding: 22px 26px 26px;
-        border: 1px solid rgba(255,255,255,0.15);
-        box-sizing: border-box;
-        backdrop-filter: blur(2px);
-    }
+.logo-group img {
+    height: 90px;
+}
 
-    .title {
-        text-align: center;
-        font-size: 40px;
-        margin-bottom: 22px;
-        font-weight: bold;
-        color: #ffffff;
-    }
+.header-title {
+    text-align: center;
+    flex: 1;
+}
 
-    .content-row {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 22px;
-    }
+.header-title h1 {
+    font-size: 48px;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
 
-    .panel {
-        background: rgba(5, 6, 8, 0.95);
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.18);
-        padding: 20px;
-        box-sizing: border-box;
-    }
+.header-title p {
+    font-size: 24px;
+    margin: 8px 0 0 0;
+    color: #ddd;
+}
 
-    /* левая панель с графиком — основная */
-    .panel-wide {
-        flex: 1.6;
-    }
+/* ================= ОСНОВНОЙ БЛОК ================= */
 
-    /* правая колонка — легенда и текст */
-    .right-column {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        flex: 1.2;
-    }
+.main-wrapper {
+    width: 90vw;
+    max-width: var(--page-max-width);
+    padding: 25px;
+}
 
-    .panel-bottom {
-        width: 100%;
-        margin-top: 28px;
-    }
+.title {
+    text-align: center;
+    font-size: 38px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+}
 
-    .panel h2 {
-        margin: 0 0 8px;
-        font-size: 32px;
-        text-align: center;
-        color: #ffffff;
-    }
+.content-row {
+    display: flex;
+    gap: 20px;
+}
 
-    .panel small {
-        display: block;
-        text-align: left;
-        font-size: 22px;
-        margin-bottom: 8px;
-        color: #cccccc;
-    }
+.panel {
+    padding: 20px;
+}
 
-    /* ---------- ГРАФИКИ ---------- */
-    #kpChart {
-        width: 100%;
-        height: 580px !important;
-        background-color: transparent;
-    }
+.panel-wide {
+    flex: 1.6;
+}
 
-    #almaKChart {
-        width: 100%;
-        height: 360px !important;
-        background-color: transparent;
-    }
+.right-column {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
 
-    .last-update {
-        font-size: 20px;
-        margin-top: 10px;
-        text-align: left;
-        color: #cccccc;
-    }
+/* ================= ТЕКСТ ================= */
 
-    .status-box {
-        margin-top: 0;
-        padding: 18px 20px;
-        border-radius: 10px;
-        background: rgba(5, 6, 8, 0.95);
-        border: 1px solid rgba(255,255,255,0.2);
-    }
+h2 {
+    margin: 0 0 10px 0;
+    text-shadow: 0 0 8px rgba(0,0,0,0.7);
+}
 
-    .status-box h2 {
-        margin: 0 0 12px;
-        font-size: 32px;
-        text-align: center;
-        color: #ffffff;
-    }
+p, small, .legend-block {
+    text-shadow: 0 0 6px rgba(0,0,0,0.7);
+}
 
-    .status-box p {
-        margin: 0;
-        font-size: 22px;
-        line-height: 1.6;
-        text-align: justify;
-        color: #dddddd;
-    }
+/* ================= ГРАФИКИ ================= */
 
-    .export-buttons {
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+#kpChart {
+    width: 100%;
+    height: 550px !important;
+    background: transparent;
+}
 
-    .export-buttons button {
-        background: #2e2e33;
-        color: #ffffff;
-        border-radius: 6px;
-        border: 1px solid #777;
-        padding: 6px 16px;
-        font-size: 18px;
-        cursor: pointer;
-    }
+#almaKChart {
+    width: 100%;
+    height: 350px !important;
+    background: transparent;
+}
 
-    .export-buttons button:hover {
-        background: #44444a;
-    }
+/* ================= ЛЕГЕНДА ================= */
 
-    /* ---------- ЛЕГЕНДА СОСТОЯНИЙ Kp ---------- */
-    .kp-label {
-        font-weight: bold;
-        text-align: center;
-        margin: 10px 0 12px;
-        font-size: 24px;
-        color: #ffffff;
-    }
+.legend-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
 
-    .legend-block {
-        margin-top: 4px;
-        font-size: 22px;
-        line-height: 1.6;
-        color: #dddddd;
-    }
+.legend-color {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    border-radius: 3px;
+}
 
-    .legend-row {
-        display: flex;
-        align-items: center;
-        margin-bottom: 4px;
-    }
+.kp-low    { background: #00b050; }
+.kp-yellow { background: #ffd800; }
+.kp-red1   { background: #ff3b3b; }
+.kp-red2   { background: #e00000; }
+.kp-red3   { background: #b00000; }
+.kp-red4   { background: #800000; }
 
-    .legend-color {
-        width: 18px;
-        height: 18px;
-        border: 1px solid #000;
-        margin-right: 10px;
-        border-radius: 3px;
-    }
+/* ================= КНОПКИ ================= */
 
-    .kp-low    { background: #00b050; }
-    .kp-yellow { background: #ffd800; }
-    .kp-red1   { background: #ff3b3b; }
-    .kp-red2   { background: #e00000; }
-    .kp-red3   { background: #b00000; }
-    .kp-red4   { background: #800000; }
+button {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    /* ---------- Пояснение про UT ---------- */
-    .ut-description {
-        margin-top: 12px;
-        font-size: 22px;
-        line-height: 1.6;
-        color: #cccccc;
-        text-align: left;
-    }
-    .ut-description strong {
-        color: #ffffff;
-    }
+button:hover {
+    background: rgba(255,255,255,0.25);
+}
 
-    /* ---------- РЕЖИМ РЕДАКТИРОВАНИЯ ---------- */
-    .admin-toggle {
-        width: 90vw;
-        max-width: var(--page-max-width);
-        margin-top: 12px;
-        text-align: right;
-        box-sizing: border-box;
-    }
-
-    .admin-toggle button {
-        background: #2e2e33;
-        color: #fff;
-        border-radius: 6px;
-        border: 1px solid #777;
-        padding: 6px 16px;
-        font-size: 18px;
-        cursor: pointer;
-    }
-
-    .admin-panel {
-        width: 90vw;
-        max-width: var(--page-max-width);
-        margin: 14px auto 20px;
-        padding: 18px 22px;
-        background: rgba(5, 6, 8, 0.95);
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.18);
-        font-size: 18px;
-        display: none;
-        color: #f0f0f0;
-        box-sizing: border-box;
-        backdrop-filter: blur(2px);
-    }
-
-    .admin-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px 18px;
-        margin-bottom: 12px;
-    }
-
-    .admin-panel input,
-    .admin-panel textarea {
-        width: 100%;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        padding: 6px;
-        font-size: 18px;
-        background: #0c0f13;
-        color: #f0f0f0;
-        box-sizing: border-box;
-    }
-
-    .btn-save {
-        background: #0b7c2f;
-        color: #fff;
-        border-radius: 6px;
-        border: 1px solid #0b7c2f;
-        padding: 6px 16px;
-        cursor: pointer;
-    }
-
-    .btn-reset {
-        background: #8b0000;
-        color: #fff;
-        border-radius: 6px;
-        border: 1px solid #8b0000;
-        padding: 6px 16px;
-        cursor: pointer;
-        margin-right: 8px;
-    }
-
-    .admin-actions {
-        margin-top: 10px;
-        text-align: right;
-    }
 </style>
 </head>
 
 <body>
 <div class="page-wrapper">
 
-    <!-- ---------- ШАПКА ---------- -->
-    <div class="header">
-        <div class="logo-group">
-            <img src="ii_logo_en.png" alt="Институт ионосферы">
-        </div>
-
-        <div class="header-title">
-            <h1>Институт ионосферы, Алматы, Казахстан</h1>
-            <p>Лаборатория диагностики и прогноза космической погоды</p>
-        </div>
-
-        <div class="logo-group">
-            <img src="banner_lab.png" alt="Лаборатория космической погоды">
-        </div>
+<div class="header">
+    <div class="logo-group">
+        <img src="ii_logo_en.png">
     </div>
 
-    <!-- ---------- ОСНОВНОЙ БЛОК ---------- -->
-    <div class="main-wrapper">
-        <div class="title">Прогноз геомагнитной активности на ближайшие 6 дней.</div>
-
-        <div class="content-row">
-            <!-- ЛЕВАЯ ПАНЕЛЬ: ПРОГНОЗ Kp -->
-            <div class="panel panel-wide">
-                <small>Kp-index</small>
-
-                <canvas id="kpChart"></canvas>
-
-                <div class="export-buttons">
-                    <button onclick="downloadPNG('kpChart','kp_forecast.png')">PNG</button>
-                </div>
-
-                <div class="last-update">
-                    Последнее обновление: <span id="last-update">–</span>
-                </div>
-            </div>
-
-            <!-- ПРАВАЯ КОЛОНКА: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + СОСТОЯНИЕ ОКП -->
-            <div class="right-column">
-                <!-- ПРАВАЯ ПАНЕЛЬ: СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ + ЛЕГЕНДА -->
-                <div class="panel">
-                    <h2>Состояние магнитного поля</h2>
-                    <small>Kp-index (планетарный индекс)</small>
-
-                    <div class="kp-label">Интерпретация значений индекса Kp</div>
-
-                    <div class="legend-block">
-                        <div class="legend-row">
-                            <div class="legend-color kp-low"></div>
-                            Спокойное / слабовозмущённое состояние (Kp = 0–3)
-                        </div>
-                        <div class="legend-row">
-                            <div class="legend-color kp-yellow"></div>
-                            Возмущенное состояние (Kp = 4)
-                        </div>
-                        <div class="legend-row">
-                            <div class="legend-color kp-red1"></div>
-                            Малая магнитная буря (Kp = 5)
-                        </div>
-                        <div class="legend-row">
-                            <div class="legend-color kp-red2"></div>
-                            Умеренная магнитная буря (Kp = 6)
-                        </div>
-                        <div class="legend-row">
-                            <div class="legend-color kp-red3"></div>
-                            Большая магнитная буря (Kp = 7)
-                        </div>
-                        <div class="legend-row">
-                            <div class="legend-color kp-red4"></div>
-                            Очень большая / экстремальная магнитная буря (Kp = 8–9)
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Состояние околоземного космического пространства -->
-                <div class="status-box">
-                    <h2>Состояние околоземного космического пространства</h2>
-                    <p id="status-text">
-                        Обзор состояния космической погоды за период за 17-23 ноября октября и прогноз на 24-30 ноября 2025 года После экстремально - большой магнитной бури 12-13 ноября, наступило затишье. Количество активных областей почти не менялось: 3-4 АО. Количество солнечных пятен уменьшалось от 66 (17.11) до 45 (21.11), немногочисленные АО имели незначительные размеры, простую геомагнитную конфигурацию и находились в стадии стабильности или распада. В течение недели по всей площади диска регистрировались незначительные исчезновения солнечных волокон, выбросы которых не были направлены в сторону Земли. На видимой стороне солнечного диска присутствовала маленькая трансэкваториальная СН1331, вызвавшая незначительное возмущение магнитосферы Земли 21 ноября. 18 ноября на восточном краю диска появилась южная СН1332, наблюдавшаяся уже третий оборот. Воздействие потоков солнечного ветра из этой СН ожидается 24-27 ноября.
-                    </p>
-                </div>
-            </div>
-        </div> <!-- конец content-row -->
-
-        <!-- НИЖНИЙ ГРАФИК: ТЕКУЩИЕ K-ИНДЕКСЫ АЛМА-АТА -->
-        <div class="panel panel-bottom">
-            <h2>Текущие 3-часовые K-индексы</h2>
-            <small>Геомагнитная обсерватория «Алма-Ата»</small>
-
-            <canvas id="almaKChart"></canvas>
-
-            <div class="ut-description">
-                <p>
-                    <strong>UT (Universal Time)</strong> – мировое время, используемое как единый стандарт для указания времени измерений. <br>
-                    <span style="color:#bbbbbb">ALM/GMT+5 – локальное время обсерватории Алма-Ата.</span>
-                </p>
-            </div>
-
-            <div class="ut-description">
-                <p>
-                    Геомагнитная обсерватория «Алма-Ата» расположена в предгорьях Северного Тянь-Шаня на высоте около 1300 м над уровнем моря, примерно в 10 км от города Алматы.
-                    Географические координаты обсерватории: 43,10° с. ш. и 76,57° в. д., геомагнитные координаты: 34,3° с. ш. и 152,7° в. д.
-                    На базе обсерватории осуществляется непрерывный мониторинг состояния геомагнитного поля.
-                </p>
-            </div>
-
-            <div class="export-buttons">
-                <button onclick="downloadPNG('almaKChart','almata_k3h.png')">PNG</button>
-            </div>
-
-            <div class="last-update">
-                Последнее обновление данных: <span id="alma-last-update"></span>
-            </div>
-        </div>
+    <div class="header-title">
+        <h1>Институт ионосферы, Алматы, Казахстан</h1>
+        <p>Лаборатория диагностики и прогноза космической погоды</p>
     </div>
 
-    <!-- РЕЖИМ РЕДАКТИРОВАНИЯ ПРОГНОЗА -->
-    <div class="admin-toggle">
-        <button id="toggle-admin">Режим редактирования</button>
-    </div>
-
-    <div class="admin-panel" id="admin-panel">
-        <h3>Ежедневное заполнение прогноза</h3>
-
-        <div class="admin-grid">
-            <div><label>Дата 1</label><input id="date-0"></div>
-            <div><label>Kp 1</label><input id="kp-0" type="number" min="0" max="9"></div><div></div>
-
-            <div><label>Дата 2</label><input id="date-1"></div>
-            <div><label>Kp 2</label><input id="kp-1" type="number" min="0" max="9"></div><div></div>
-
-            <div><label>Дата 3</label><input id="date-2"></div>
-            <div><label>Kp 3</label><input id="kp-2" type="number" min="0" max="9"></div><div></div>
-
-            <div><label>Дата 4</label><input id="date-3"></div>
-            <div><label>Kp 4</label><input id="kp-3" type="number" min="0" max="9"></div><div></div>
-
-            <div><label>Дата 5</label><input id="date-4"></div>
-            <div><label>Kp 5</label><input id="kp-4" type="number" min="0" max="9"></div><div></div>
-
-            <div><label>Дата 6</label><input id="date-5"></div>
-            <div><label>Kp 6</label><input id="kp-5" type="number" min="0" max="9"></div><div></div>
-        </div>
-
-        <label>Последнее обновление</label>
-        <input id="form-last-update">
-
-        <label>Описание обстановки</label>
-        <textarea id="form-status-text"></textarea>
-
-        <div class="admin-actions">
-            <button class="btn-reset" id="btn-reset">Сброс</button>
-            <button class="btn-save" id="btn-save">Сохранить</button>
-        </div>
+    <div class="logo-group">
+        <img src="banner_lab.png">
     </div>
 </div>
 
-<!-- Chart.js -->
+<div class="main-wrapper">
+    <div class="title">
+        Прогноз геомагнитной активности на ближайшие 6 дней.
+    </div>
+
+    <div class="content-row">
+        <div class="panel panel-wide">
+            <canvas id="kpChart"></canvas>
+        </div>
+
+        <div class="right-column">
+            <div class="panel">
+                <h2>Состояние магнитного поля</h2>
+
+                <div class="legend-row">
+                    <div class="legend-color kp-low"></div>
+                    Спокойное состояние (Kp 0–3)
+                </div>
+
+                <div class="legend-row">
+                    <div class="legend-color kp-yellow"></div>
+                    Возмущённое состояние (Kp 4)
+                </div>
+
+                <div class="legend-row">
+                    <div class="legend-color kp-red1"></div>
+                    Магнитная буря (Kp 5–9)
+                </div>
+            </div>
+
+            <div class="status-box">
+                <h2>Состояние околоземного космического пространства</h2>
+                <p>
+                    Текущая солнечная активность характеризуется умеренным уровнем.
+                    Ожидаются периоды повышенной геомагнитной активности.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel" style="margin-top:30px;">
+        <h2>Текущие 3-часовые K-индексы</h2>
+        <canvas id="almaKChart"></canvas>
+    </div>
+
+</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-/* ================= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ================= */
+new Chart(document.getElementById("kpChart"), {
+    type: 'bar',
+    data: {
+        labels: ["24.11", "25.11", "26.11", "27.11", "28.11", "29.11"],
+        datasets: [{
+            data: [1,3,4,6,4,2],
+            backgroundColor: ["#00b050","#00b050","#ffd800","#e00000","#ffd800","#00b050"]
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false }
+});
 
-const STORAGE_KEY = "swKpForecast_v3";
-
-function pad2(n) { return n < 10 ? "0" + n : "" + n; }
-
-function formatNowUtc() {
-    const d = new Date();
-    return pad2(d.getUTCDate()) + "." +
-           pad2(d.getUTCMonth() + 1) + "." +
-           d.getFullYear() + " " +
-           pad2(d.getUTCHours()) + ":" +
-           pad2(d.getUTCMinutes()) + " UT";
-}
-
-/* 6 дат прогноза: сегодня + 0…5 дней, формат DD.MM.YYYY */
-function generateForecastDates() {
-    const today = new Date();
-    const dates = [];
-    for (let i = 0; i < 6; i++) {
-        const d = new Date(today);
-        d.setDate(d.getDate() + i);
-        dates.push(pad2(d.getDate()) + "." + pad2(d.getMonth() + 1) + "." + d.getFullYear());
-    }
-    return dates;
-}
-
-/* формат даты для подписи: "24.11.25" */
-function formatDateDDMMYY(datePart) {
-    const [yyyy, mm, dd] = datePart.split("-");
-    return dd + "." + mm + "." + yyyy.slice(-2);
-}
-
-/* цвет для прогнозного Kp (верхний график) */
-function kpColor(kp) {
-    if (kp <= 3) return "#00b050";
-    if (kp === 4) return "#ffd800";
-    if (kp === 5) return "#ff3b3b";
-    if (kp === 6) return "#e00000";
-    if (kp === 7) return "#b00000";
-    return "#800000";
-}
-
-/* цвета в стиле Potsdam для наблюдённых K */
-function gfzKColor(kp) {
-    if (kp <= 0) return "#0000ff";
-    if (kp <= 3) return "#00ff00";
-    if (kp === 4) return "#ffff00";
-    if (kp <= 6) return "#ff9900";
-    return "#ff0000";
-}
-
-/* ================= ПРОГНОЗНЫЙ ГРАФИК KP ================= */
-
-const defaultData = {
-    dates: generateForecastDates(),
-    kp:    [1, 2, 4, 6, 7, 8],
-    lastUpdate: "",
-    statusText: "Обзор состояния космической погоды за период за 17-23 ноября октября и прогноз на 24-30 ноября 2025 года После экстремально - большой магнитной бури 12-13 ноября, наступило затишье. Количество активных областей почти не менялось: 3-4 АО. Количество солнечных пятен уменьшалось от 66 (17.11) до 45 (21.11), немногочисленные АО имели незначительные размеры, простую геомагнитную конфигурацию и находились в стадии стабильности или распада. В течение недели по всей площади диска регистрировались незначительные исчезновения солнечных волокон, выбросы которых не были направлены в сторону Земли. На видимой стороне солнечного диска присутствовала маленькая трансэкваториальная СН1331, вызвавшая незначительное возмущение магнитосферы Земли 21 ноября. 18 ноября на восточном краю диска появилась южная СН1332, наблюдавшаяся уже третий оборот. Воздействие потоков солнечного ветра из этой СН ожидается 24-27 ноября."
-};
-
-function loadData() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return defaultData;
-        const parsed = JSON.parse(raw);
-        if (!parsed.dates || !parsed.kp) return defaultData;
-        return parsed;
-    } catch {
-        return defaultData;
-    }
-}
-
-function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-let kpChartInstance = null;
-
-/* плагин — значения Kp внутри столбцов (верхний график) */
-const valueLabelPlugin = {
-    id: "valueLabel",
-    afterDatasetsDraw(chart) {
-        if (!chart.canvas || chart.canvas.id !== "kpChart") return;
-
-        const { ctx } = chart;
-        const dataset = chart.data.datasets[0];
-        const meta = chart.getDatasetMeta(0);
-
-        ctx.save();
-        ctx.font = "bold 24px Arial";
-        ctx.fillStyle = "#ffffff";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        meta.data.forEach((bar, index) => {
-            const val = dataset.data[index];
-            if (val == null) return;
-
-            const props = bar.getProps(["x", "y", "base"], true);
-            const x = props.x;
-            const y = props.y;
-            const base = props.base;
-            const centerY = y + (base - y) / 2;
-
-            ctx.fillText(val, x, centerY);
-        });
-
-        ctx.restore();
-    }
-};
-
-/* плагин — вертикальные разделители суток и дата над графиком для ALMA */
-const daySeparatorPlugin = {
-    id: "daySeparator",
-    afterDraw(chart) {
-        if (!chart.canvas || chart.canvas.id !== "almaKChart") return;
-
-        const labels = chart.data.labels;
-        if (!labels || !labels.length) return;
-
-        const xScale = chart.scales.x;
-        const yScale = chart.scales.y;
-        const ctx = chart.ctx;
-
-        const dayGroups = [];
-        let currentDay = null;
-        let startIndex = 0;
-
-        labels.forEach((lab, i) => {
-            const day = lab.split(" ")[0];
-            if (day !== currentDay) {
-                if (currentDay !== null) {
-                    dayGroups.push({ day: currentDay, start: startIndex, end: i - 1 });
-                }
-                currentDay = day;
-                startIndex = i;
-
-                if (i > 0) {
-                    const x = xScale.getPixelForValue(i);
-                    ctx.save();
-                    ctx.strokeStyle = "rgba(255,255,255,0.5)";
-                    ctx.lineWidth = 2;
-                    ctx.setLineDash([5, 4]);
-                    ctx.beginPath();
-                    ctx.moveTo(x, yScale.top);
-                    ctx.lineTo(x, yScale.bottom);
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            }
-        });
-        if (currentDay !== null) {
-            dayGroups.push({ day: currentDay, start: startIndex, end: labels.length - 1 });
-        }
-
-        ctx.save();
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 20px Arial";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "bottom";
-
-        dayGroups.forEach(group => {
-            const midIndex = (group.start + group.end) / 2;
-            const xMid = xScale.getPixelForValue(midIndex);
-            const dateText = formatDateDDMMYY(group.day);
-            const yPos = yScale.top - 8;
-            ctx.fillText(dateText, xMid, yPos);
-        });
-
-        ctx.restore();
-    }
-};
-
-Chart.register(valueLabelPlugin, daySeparatorPlugin);
-
-function renderKpChart(data) {
-    const ctx = document.getElementById("kpChart").getContext("2d");
-    if (kpChartInstance) kpChartInstance.destroy();
-
-    const colors = data.kp.map(kpColor);
-
-    kpChartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: data.dates,
-            datasets: [{
-                data: data.kp,
-                backgroundColor: colors,
-                borderColor: "#000000",
-                borderWidth: 1.4,
-                barThickness: "flex",
-                barPercentage: 0.9,
-                categoryPercentage: 0.98,
-                borderRadius: 3
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            layout: { padding: { top: 24, right: 24, left: 12, bottom: 14 } },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 9,
-                    ticks: { stepSize: 1, color: "#ffffff", font: { size: 22 } },
-                    grid: { color: "rgba(255,255,255,0.25)" },
-                    title: { display: true, text: "Kp-index", color: "#ffffff", font: { size: 24 } }
-                },
-                x: {
-                    ticks: { color: "#ffffff", font: { size: 22 } },
-                    grid: { display: false },
-                    title: { display: true, text: "Дата", color: "#ffffff", font: { size: 24 } }
-                }
-            }
-        }
-    });
-
-    document.getElementById("last-update").textContent =
-        data.lastUpdate || formatNowUtc();
-    document.getElementById("status-text").textContent =
-        data.statusText || "Нет данных.";
-}
-
-/* ---------- ФОРМА РЕДАКТИРОВАНИЯ ПРОГНОЗА ---------- */
-
-function fillForm(data) {
-    for (let i = 0; i < 6; i++) {
-        document.getElementById("date-" + i).value = data.dates[i] || "";
-        document.getElementById("kp-" + i).value   = data.kp[i] ?? "";
-    }
-    document.getElementById("form-last-update").value = data.lastUpdate || "";
-    document.getElementById("form-status-text").value = data.statusText || "";
-}
-
-function readForm() {
-    const dates = [];
-    const kp = [];
-    for (let i = 0; i < 6; i++) {
-        dates.push(document.getElementById("date-" + i).value || "");
-        const val = Number(document.getElementById("kp-" + i).value);
-        kp.push(Number.isNaN(val) ? 0 : val);
-    }
-    return {
-        dates,
-        kp,
-        lastUpdate: document.getElementById("form-last-update").value || "",
-        statusText: document.getElementById("form-status-text").value || ""
-    };
-}
-
-function autoFillDates() {
-    const dates = generateForecastDates();
-    for (let i = 0; i < 6; i++) {
-        document.getElementById("date-" + i).value = dates[i];
-    }
-}
-
-document.getElementById("toggle-admin").onclick = () => {
-    const p = document.getElementById("admin-panel");
-    const isOpening = (p.style.display !== "block");
-    p.style.display = isOpening ? "block" : "none";
-    if (isOpening) autoFillDates();
-};
-
-document.getElementById("btn-save").onclick = () => {
-    const data = readForm();
-    data.lastUpdate = formatNowUtc();
-    document.getElementById("form-last-update").value = data.lastUpdate;
-    saveData(data);
-    renderKpChart(data);
-
-    document.getElementById("admin-panel").style.display = "none";
-    setTimeout(() => location.reload(), 100);
-};
-
-document.getElementById("btn-reset").onclick = () => {
-    const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
-    saveData(data);
-    fillForm(data);
-    renderKpChart(data);
-};
-
-/* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
-
-let almaChartInstance = null;
-
-function renderAlmaKChart(labels, values) {
-    const ctx = document.getElementById("almaKChart").getContext("2d");
-    if (almaChartInstance) almaChartInstance.destroy();
-
-    almaChartInstance = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels,
-            datasets: [{
-                data: values,
-                backgroundColor: values.map(gfzKColor),
-                borderColor: function(context) {
-                    const index = context.dataIndex;
-                    const labels = context.chart.data.labels;
-                    const baseColor = "#444444";
-                    if (!labels || index === 0) return baseColor;
-                    const day = labels[index].split(" ")[0];
-                    const prevDay = labels[index - 1].split(" ")[0];
-                    return (day !== prevDay) ? "#ffffff" : baseColor;
-                },
-                borderWidth: function(context) {
-                    const index = context.dataIndex;
-                    const labels = context.chart.data.labels;
-                    if (!labels || index === 0) return 1;
-                    const day = labels[index].split(" ")[0];
-                    const prevDay = labels[index - 1].split(" ")[0];
-                    if (day !== prevDay) return { left: 3, top: 1, right: 1, bottom: 1 };
-                    return 1;
-                },
-                barThickness: "flex",
-                barPercentage: 0.9,
-                categoryPercentage: 1.0,
-                borderRadius: 0
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            layout: { padding: { top: 36, right: 24, left: 12, bottom: 16 } },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 9,
-                    ticks: { stepSize: 1, color: "#f0f0f0", font: { family: "Arial", size: 22 } },
-                    grid: { color: "rgba(255,255,255,0.12)" },
-                    title: { display: true, text: "K-index", color: "#f0f0f0", font: { family: "Arial", size: 24 } }
-                },
-                x: {
-                    ticks: {
-                        color: "#f0f0f0",
-                        font: { family: "Arial", size: 22 },
-                        autoSkip: false,
-                        maxRotation: 0,
-                        minRotation: 0,
-                        callback: function (value) {
-                            const raw = this.getLabelForValue(value);
-                            if (!raw) return "";
-                            const parts = raw.split(" ");
-                            const timePartFull = parts[1] || "";
-                            return timePartFull.slice(0, 5);
-                        }
-                    },
-                    grid: { display: false },
-                    title: { display: true, text: "Время (UT)", color: "#f0f0f0", font: { family: "Arial", size: 24 } }
-                }
-            }
-        }
-    });
-
-    if (labels.length) {
-        const lastRaw = labels[labels.length - 1];
-        const [datePart, timePartFull] = lastRaw.split(" ");
-        const time = timePartFull ? timePartFull.slice(0, 5) : "";
-        document.getElementById("alma-last-update").textContent =
-            formatDateDDMMYY(datePart) + " " + time + " UT";
-    } else {
-        document.getElementById("alma-last-update").textContent = "нет данных";
-    }
-}
-
-async function loadAlmaDataFromTxt() {
-    try {
-        const resp = await fetch("k-index.txt", { cache: "no-store" });
-        if (!resp.ok) throw new Error("Не удалось загрузить k-index.txt: " + resp.status);
-
-        const text = await resp.text();
-        const lines = text.trim().split(/\r?\n/);
-
-        const fullLabels = [];
-        const fullValues = [];
-
-        for (const raw of lines) {
-            const line = raw.trim();
-            if (!line) continue;
-
-            const parts = line.split(",");
-            if (parts.length < 2) continue;
-
-            const dtStr  = parts[0].trim();
-            const valStr = parts[1].trim();
-            const val = parseFloat(valStr);
-
-            if (isNaN(val) || val < 0) continue;
-
-            fullLabels.push(dtStr);
-            fullValues.push(val);
-        }
-
-        if (!fullValues.length) throw new Error("k-index.txt: нет корректных значений K-индекса");
-
-        const N = 12;
-        const start = Math.max(0, fullLabels.length - N);
-        const labels = fullLabels.slice(start);
-        const values = fullValues.slice(start);
-
-        renderAlmaKChart(labels, values);
-    } catch (e) {
-        console.error("Ошибка загрузки/обработки k-index.txt:", e);
-        document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
-    }
-}
-
-/* ================= ЭКСПОРТ В PNG ================= */
-
-function downloadPNG(canvasId, fileName) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return;
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = fileName || (canvasId + ".png");
-    link.click();
-}
-
-/* ================= ИНИЦИАЛИЗАЦИЯ СТРАНИЦЫ ================= */
-
-const initialData = loadData();
-if (!initialData.lastUpdate) initialData.lastUpdate = formatNowUtc();
-fillForm(initialData);
-renderKpChart(initialData);
-
-loadAlmaDataFromTxt();
-// setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
+new Chart(document.getElementById("almaKChart"), {
+    type: 'bar',
+    data: {
+        labels: ["00","03","06","09","12","15","18","21"],
+        datasets: [{
+            data: [1,2,2,3,4,3,2,1],
+            backgroundColor:"#00b050"
+        }]
+    },
+    options: { responsive:true, maintainAspectRatio:false }
+});
 </script>
+
 </body>
 </html>
