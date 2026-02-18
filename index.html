@@ -9,9 +9,9 @@
         --page-max-width: 1700px;
 
         /* Glass-настройки */
-        --glass-bg: rgba(10, 15, 25, 0.28);      /* прозрачность блока */
-        --glass-border: rgba(255,255,255,0.22);  /* рамка */
-        --glass-blur: 12px;                      /* размытие */
+        --glass-bg: rgba(10, 15, 25, 0.28);
+        --glass-border: rgba(255,255,255,0.22);
+        --glass-blur: 12px;
         --glass-shadow: 0 8px 30px rgba(0,0,0,0.25);
 
         /* затемнение фона для читаемости */
@@ -32,7 +32,6 @@
         background-attachment: fixed;
     }
 
-    /* Мягкое затемнение поверх фона — чтобы текст читался */
     body::before {
         content: "";
         position: fixed;
@@ -41,7 +40,6 @@
         z-index: -1;
     }
 
-    /* ======== ОБЩИЙ СТИЛЬ СТРАНИЦЫ ======== */
     .page-wrapper {
         min-height: 100vh;
         padding-bottom: 40px;
@@ -55,7 +53,6 @@
         background: transparent;
     }
 
-    /* ---------- GLASS-ЭФФЕКТ ДЛЯ ОСНОВНЫХ БЛОКОВ ---------- */
     .header,
     .main-wrapper,
     .panel,
@@ -68,7 +65,6 @@
         box-shadow: var(--glass-shadow);
     }
 
-    /* Текст читаемее */
     h1, h2, h3, p, small, .legend-block, .ut-description, .title, .kp-label, .last-update {
         text-shadow: 0 0 8px rgba(0,0,0,0.55);
     }
@@ -148,12 +144,10 @@
         box-sizing: border-box;
     }
 
-    /* левая панель с графиком — основная */
     .panel-wide {
         flex: 1.6;
     }
 
-    /* правая колонка — легенда */
     .right-column {
         display: flex;
         flex-direction: column;
@@ -188,13 +182,13 @@
         background-color: transparent;
     }
 
-    /* ✅ FIX: контейнер для almaKChart (чтобы не “сплющивались” подписи) */
+    /* ✅ FIX: контейнер для almaKChart */
     .chart-wrap {
         position: relative;
         width: 100%;
     }
     .chart-wrap-alma {
-        height: 360px; /* высоту задаём контейнеру */
+        height: 360px; /* desktop */
     }
     .chart-wrap-alma canvas {
         width: 100% !important;
@@ -203,32 +197,25 @@
         background: transparent;
     }
 
+    /* ✅ АДАПТИВНАЯ ВЫСОТА almaKChart */
+    @media (max-width: 1100px) {
+        .chart-wrap-alma { height: 320px; }
+    }
+    @media (max-width: 768px) {
+        .chart-wrap-alma { height: 290px; }
+        .header-title h1 { font-size: 36px; }
+        .header-title p  { font-size: 18px; }
+        .title { font-size: 28px; }
+    }
+    @media (max-width: 480px) {
+        .chart-wrap-alma { height: 260px; }
+    }
+
     .last-update {
         font-size: 20px;
         margin-top: 10px;
         text-align: left;
         color: #e2e2e2;
-    }
-
-    .status-box {
-        margin-top: 0;
-        padding: 18px 20px;
-        border-radius: 12px;
-    }
-
-    .status-box h2 {
-        margin: 0 0 12px;
-        font-size: 32px;
-        text-align: center;
-        color: #ffffff;
-    }
-
-    .status-box p {
-        margin: 0;
-        font-size: 22px;
-        line-height: 1.6;
-        text-align: justify;
-        color: #f0f0f0;
     }
 
     .export-buttons {
@@ -253,7 +240,6 @@
         background: rgba(255,255,255,0.18);
     }
 
-    /* ---------- ЛЕГЕНДА СОСТОЯНИЙ Kp ---------- */
     .kp-label {
         font-weight: bold;
         text-align: center;
@@ -290,7 +276,6 @@
     .kp-red3   { background: #b00000; }
     .kp-red4   { background: #800000; }
 
-    /* ---------- Пояснение про UT ---------- */
     .ut-description {
         margin-top: 12px;
         font-size: 22px;
@@ -386,6 +371,12 @@
         margin-top: 10px;
         text-align: right;
     }
+
+    /* ✅ Рекомендация: чтобы блоки не “ломались” на узких экранах */
+    @media (max-width: 1100px) {
+        .content-row { flex-direction: column; }
+        .panel-wide, .right-column { flex: 1; width: 100%; }
+    }
 </style>
 </head>
 
@@ -428,7 +419,7 @@
                 </div>
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА: ТОЛЬКО "СОСТОЯНИЕ МАГНИТНОГО ПОЛЯ" -->
+            <!-- ПРАВАЯ КОЛОНКА -->
             <div class="right-column">
                 <div class="panel">
                     <h2>Состояние магнитного поля</h2>
@@ -464,7 +455,7 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- конец content-row -->
+        </div>
 
         <!-- Состояние околоземного космического пространства -->
         <div class="panel panel-bottom">
@@ -479,7 +470,6 @@
             <h2>Текущие 3-часовые K-индексы</h2>
             <small>Геомагнитная обсерватория «Алма-Ата»</small>
 
-            <!-- ✅ FIX: обертка контейнером для правильного рендера текста -->
             <div class="chart-wrap chart-wrap-alma">
                 <canvas id="almaKChart"></canvas>
             </div>
@@ -569,7 +559,6 @@ function formatNowUtc() {
            pad2(d.getUTCMinutes()) + " UT";
 }
 
-/* 6 дат прогноза: сегодня + 0…5 дней, формат DD.MM.YYYY */
 function generateForecastDates() {
     const today = new Date();
     const dates = [];
@@ -581,13 +570,11 @@ function generateForecastDates() {
     return dates;
 }
 
-/* формат даты для подписи: "24.11.25" */
 function formatDateDDMMYY(datePart) {
     const [yyyy, mm, dd] = datePart.split("-");
     return dd + "." + mm + "." + yyyy.slice(-2);
 }
 
-/* цвет для прогнозного Kp (верхний график) */
 function kpColor(kp) {
     if (kp <= 3) return "#00b050";
     if (kp === 4) return "#ffd800";
@@ -597,7 +584,6 @@ function kpColor(kp) {
     return "#800000";
 }
 
-/* цвета в стиле Potsdam для наблюдённых K */
 function gfzKColor(kp) {
     if (kp <= 0) return "#0000ff";
     if (kp <= 3) return "#00ff00";
@@ -633,7 +619,6 @@ function saveData(data) {
 
 let kpChartInstance = null;
 
-/* плагин — значения Kp внутри столбцов (верхний график) */
 const valueLabelPlugin = {
     id: "valueLabel",
     afterDatasetsDraw(chart) {
@@ -666,7 +651,6 @@ const valueLabelPlugin = {
     }
 };
 
-/* плагин — вертикальные разделители суток и дата над графиком для ALMA */
 const daySeparatorPlugin = {
     id: "daySeparator",
     afterDraw(chart) {
@@ -710,6 +694,7 @@ const daySeparatorPlugin = {
             dayGroups.push({ day: currentDay, start: startIndex, end: labels.length - 1 });
         }
 
+        /* ✅ padding сверху для дат над графиком */
         ctx.save();
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 20px Arial";
@@ -720,7 +705,7 @@ const daySeparatorPlugin = {
             const midIndex = (group.start + group.end) / 2;
             const xMid = xScale.getPixelForValue(midIndex);
             const dateText = formatDateDDMMYY(group.day);
-            const yPos = yScale.top - 8;
+            const yPos = yScale.top - 14; /* было -8, стало выше */
             ctx.fillText(dateText, xMid, yPos);
         });
 
@@ -759,40 +744,21 @@ function renderKpChart(data) {
                 y: {
                     beginAtZero: true,
                     max: 9,
-                    ticks: {
-                        stepSize: 1,
-                        color: "#ffffff",
-                        font: { size: 22 }
-                    },
+                    ticks: { stepSize: 1, color: "#ffffff", font: { size: 22 } },
                     grid: { color: "rgba(255,255,255,0.25)" },
-                    title: {
-                        display: true,
-                        text: "Kp-index",
-                        color: "#ffffff",
-                        font: { size: 24 }
-                    }
+                    title: { display: true, text: "Kp-index", color: "#ffffff", font: { size: 24 } }
                 },
                 x: {
-                    ticks: {
-                        color: "#ffffff",
-                        font: { size: 22 }
-                    },
+                    ticks: { color: "#ffffff", font: { size: 22 } },
                     grid: { display: false },
-                    title: {
-                        display: true,
-                        text: "Дата",
-                        color: "#ffffff",
-                        font: { size: 24 }
-                    }
+                    title: { display: true, text: "Дата", color: "#ffffff", font: { size: 24 } }
                 }
             }
         }
     });
 
-    document.getElementById("last-update").textContent =
-        data.lastUpdate || formatNowUtc();
-    document.getElementById("status-text").textContent =
-        data.statusText || "Нет данных.";
+    document.getElementById("last-update").textContent = data.lastUpdate || formatNowUtc();
+    document.getElementById("status-text").textContent = data.statusText || "Нет данных.";
 }
 
 /* ---------- ФОРМА РЕДАКТИРОВАНИЯ ПРОГНОЗА ---------- */
@@ -833,10 +799,7 @@ document.getElementById("toggle-admin").onclick = () => {
     const p = document.getElementById("admin-panel");
     const isOpening = (p.style.display !== "block");
     p.style.display = isOpening ? "block" : "none";
-
-    if (isOpening) {
-        autoFillDates();
-    }
+    if (isOpening) autoFillDates();
 };
 
 document.getElementById("btn-save").onclick = () => {
@@ -851,11 +814,7 @@ document.getElementById("btn-save").onclick = () => {
 };
 
 document.getElementById("btn-reset").onclick = () => {
-    const data = {
-        ...defaultData,
-        dates: generateForecastDates(),
-        lastUpdate: formatNowUtc()
-    };
+    const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
     saveData(data);
     fillForm(data);
     renderKpChart(data);
@@ -891,9 +850,7 @@ function renderAlmaKChart(labels, values) {
                     if (!labels || index === 0) return 1;
                     const day = labels[index].split(" ")[0];
                     const prevDay = labels[index - 1].split(" ")[0];
-                    if (day !== prevDay) {
-                        return { left: 3, top: 1, right: 1, bottom: 1 };
-                    }
+                    if (day !== prevDay) return { left: 3, top: 1, right: 1, bottom: 1 };
                     return 1;
                 },
                 barThickness: "flex",
@@ -903,14 +860,13 @@ function renderAlmaKChart(labels, values) {
             }]
         },
         options: {
-            /* ✅ FIX: резкость на разных экранах */
             devicePixelRatio: window.devicePixelRatio || 1,
-
             maintainAspectRatio: false,
             plugins: { legend: { display: false } },
-            layout: { padding: { top: 36, right: 24, left: 12, bottom: 16 } },
 
-            /* ✅ FIX: нормальные шрифты/размеры (не сплющивает) */
+            /* ✅ padding сверху увеличен — чтобы даты не упирались */
+            layout: { padding: { top: 52, right: 24, left: 12, bottom: 16 } },
+
             scales: {
                 y: {
                     beginAtZero: true,
@@ -996,9 +952,7 @@ async function loadAlmaDataFromTxt() {
             fullValues.push(val);
         }
 
-        if (!fullValues.length) {
-            throw new Error("k-index.txt: нет корректных значений K-индекса");
-        }
+        if (!fullValues.length) throw new Error("k-index.txt: нет корректных значений K-индекса");
 
         const N = 12;
         const start = Math.max(0, fullLabels.length - N);
@@ -1008,8 +962,7 @@ async function loadAlmaDataFromTxt() {
         renderAlmaKChart(labels, values);
     } catch (e) {
         console.error("Ошибка загрузки/обработки k-index.txt:", e);
-        document.getElementById("alma-last-update").textContent =
-            "Ошибка загрузки данных";
+        document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
     }
 }
 
@@ -1031,7 +984,8 @@ if (!initialData.lastUpdate) initialData.lastUpdate = formatNowUtc();
 fillForm(initialData);
 renderKpChart(initialData);
 
-loadAlmaDataFromTxt();
+loadAlmaDataFromTxt();                    // первая загрузка
+setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000); // ✅ автообновление каждые 5 минут
 </script>
 </body>
 </html>
