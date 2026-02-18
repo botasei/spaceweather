@@ -694,7 +694,6 @@ const daySeparatorPlugin = {
             dayGroups.push({ day: currentDay, start: startIndex, end: labels.length - 1 });
         }
 
-        /* ✅ padding сверху для дат над графиком */
         ctx.save();
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 20px Arial";
@@ -705,7 +704,7 @@ const daySeparatorPlugin = {
             const midIndex = (group.start + group.end) / 2;
             const xMid = xScale.getPixelForValue(midIndex);
             const dateText = formatDateDDMMYY(group.day);
-            const yPos = yScale.top - 14; /* было -8, стало выше */
+            const yPos = yScale.top - 14;
             ctx.fillText(dateText, xMid, yPos);
         });
 
@@ -924,10 +923,11 @@ function renderAlmaKChart(labels, values) {
     }
 }
 
+/* ✅ ЗАМЕНА: читаем KAAA из data/kaaa.txt (формат: YYYY-MM-DD HH:MM:SS,K) */
 async function loadAlmaDataFromTxt() {
     try {
-        const resp = await fetch("k-index.txt", { cache: "no-store" });
-        if (!resp.ok) throw new Error("Не удалось загрузить k-index.txt: " + resp.status);
+        const resp = await fetch("data/kaaa.txt?rnd=" + Math.random(), { cache: "no-store" });
+        if (!resp.ok) throw new Error("Не удалось загрузить data/kaaa.txt: " + resp.status);
 
         const text = await resp.text();
         const lines = text.trim().split(/\r?\n/);
@@ -942,9 +942,8 @@ async function loadAlmaDataFromTxt() {
             const parts = line.split(",");
             if (parts.length < 2) continue;
 
-            const dtStr  = parts[0].trim();
-            const valStr = parts[1].trim();
-            const val = parseFloat(valStr);
+            const dtStr = parts[0].trim();     // "YYYY-MM-DD HH:MM:SS"
+            const val = parseFloat(parts[1]);  // K
 
             if (isNaN(val) || val < 0) continue;
 
@@ -952,8 +951,11 @@ async function loadAlmaDataFromTxt() {
             fullValues.push(val);
         }
 
-        if (!fullValues.length) throw new Error("k-index.txt: нет корректных значений K-индекса");
+        if (!fullValues.length) {
+            throw new Error("data/kaaa.txt: нет корректных значений K-индекса");
+        }
 
+        // берём только последние 12 точек
         const N = 12;
         const start = Math.max(0, fullLabels.length - N);
         const labels = fullLabels.slice(start);
@@ -961,7 +963,7 @@ async function loadAlmaDataFromTxt() {
 
         renderAlmaKChart(labels, values);
     } catch (e) {
-        console.error("Ошибка загрузки/обработки k-index.txt:", e);
+        console.error("Ошибка загрузки/обработки data/kaaa.txt:", e);
         document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
     }
 }
@@ -984,8 +986,8 @@ if (!initialData.lastUpdate) initialData.lastUpdate = formatNowUtc();
 fillForm(initialData);
 renderKpChart(initialData);
 
-loadAlmaDataFromTxt();                    // первая загрузка
-setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000); // ✅ автообновление каждые 5 минут
+loadAlmaDataFromTxt();                          // первая загрузка (KAAA)
+setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000); // автообновление каждые 5 минут
 </script>
 </body>
 </html>
