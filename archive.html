@@ -4,127 +4,495 @@
   <meta charset="utf-8"/>
   <title>Архив прогнозов — Институт ионосферы</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
   <style>
-    body{font-family:Arial,sans-serif;margin:20px;max-width:1200px}
-    h1{margin:0 0 8px}
-    .wrap{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:14px}
-    .list{border:1px solid #ddd;border-radius:12px;padding:10px}
-    .list button{
-      width:100%; text-align:left; padding:10px 12px; margin:6px 0;
-      border-radius:10px; border:1px solid #e5e5e5; background:#fff; cursor:pointer;
+    :root{
+      --page-max-width: 1700px;
+
+      /* Glass */
+      --glass-bg: rgba(10, 15, 25, 0.28);
+      --glass-border: rgba(255,255,255,0.22);
+      --glass-blur: 12px;
+      --glass-shadow: 0 8px 30px rgba(0,0,0,0.25);
+
+      /* фон */
+      --bg-dim: rgba(0,0,0,0.33);
+    }
+
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      color:#f0f0f0;
+      font-size:18px;
+
+      background-image:url("background_sun.jpg");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:var(--bg-dim);
+      z-index:-1;
+    }
+
+    .page-wrapper{
+      min-height:100vh;
+      padding:10px 0 40px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+
+      position:relative;
+      z-index:1;
+      background:transparent;
+    }
+
+    /* glass */
+    .header,
+    .main-wrapper,
+    .panel{
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow);
+    }
+
+    /* читаемость */
+    h1,h2,h3,p,small,.title,.muted{
+      text-shadow:0 0 8px rgba(0,0,0,0.55);
+    }
+
+    /* ---------- ШАПКА ---------- */
+    .header{
+      width:90vw;
+      max-width:var(--page-max-width);
+      margin:0 auto;
+      padding:15px 18px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-sizing:border-box;
+      border-radius:12px;
+      gap:12px;
+    }
+
+    .logo-group{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:120px;
+    }
+    .logo-group img{
+      height:78px;
+      object-fit:contain;
+    }
+
+    .header-title{
+      text-align:center;
+      flex:1;
+      padding:0 10px;
+    }
+    .header-title h1{
+      font-size:40px;
+      margin:0;
+      letter-spacing:0.3px;
+      color:#fff;
+      line-height:1.25;
+    }
+    .header-title p{
+      font-size:20px;
+      margin:8px 0 0;
+      color:#e0e0e0;
+    }
+
+    /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
+    .main-wrapper{
+      width:90vw;
+      max-width:var(--page-max-width);
+      margin:14px auto 0;
+      border-radius:12px;
+      padding:18px 18px 22px;
+      box-sizing:border-box;
+    }
+
+    .top-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
+    .title{
+      font-size:34px;
+      margin:0;
+      font-weight:bold;
+      color:#fff;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.28);
+      padding:8px 14px;
+      font-size:16px;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.18);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    .btn:hover{ background:rgba(255,255,255,0.18); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 360px 1fr;
+      gap:16px;
+    }
+
+    .panel{
+      border-radius:12px;
+      padding:14px;
+      box-sizing:border-box;
+    }
+
+    .panel h2{
+      margin:0 0 10px;
+      font-size:24px;
+      color:#fff;
+      text-align:left;
+    }
+
+    .muted{
+      color:#e6e6e6;
+      font-size:14px;
+      margin:6px 0 10px;
+      opacity:0.95;
+    }
+
+    /* поиск + список */
+    .search-wrap{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .input{
+      width:100%;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.25);
+      padding:10px 12px;
+      font-size:16px;
+      background:rgba(0,0,0,0.35);
+      color:#f0f0f0;
+      box-sizing:border-box;
+      outline:none;
+    }
+    .input:focus{ border-color:rgba(255,255,255,0.45); }
+
+    .dates{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:520px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .date-btn{
+      width:100%;
+      text-align:left;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.22);
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      cursor:pointer;
       font-size:16px;
     }
-    .list button:hover{background:#f6f6f6}
-    .list button.active{background:#eef5ff;border-color:#bcd6ff}
-    .panel{border:1px solid #ddd;border-radius:12px;padding:14px}
-    pre{background:#f6f6f6;padding:12px;border-radius:12px;overflow:auto}
-    .muted{color:#666;font-size:14px;margin:0}
-    .kpline{font-size:18px;margin:8px 0}
+    .date-btn:hover{ background:rgba(255,255,255,0.12); }
+    .date-btn.active{
+      background:rgba(255,255,255,0.18);
+      border-color:rgba(255,255,255,0.35);
+    }
+
+    /* просмотр */
+    .kv-line{
+      font-size:18px;
+      margin:8px 0;
+      color:#f0f0f0;
+      line-height:1.5;
+    }
+
+    .box{
+      margin-top:10px;
+      background:rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:12px;
+      padding:12px;
+    }
+
+    details{
+      margin-top:12px;
+    }
+    summary{
+      cursor:pointer;
+      color:#fff;
+      font-weight:bold;
+      user-select:none;
+    }
+    pre{
+      margin-top:10px;
+      background:rgba(0,0,0,0.35);
+      border:1px solid rgba(255,255,255,0.18);
+      padding:12px;
+      border-radius:12px;
+      overflow:auto;
+      color:#f0f0f0;
+      font-size:14px;
+    }
+
+    .status{
+      white-space:pre-wrap;
+      line-height:1.7;
+      font-size:18px;
+      color:#f0f0f0;
+    }
+
+    .empty{
+      padding:10px 0;
+      color:#e6e6e6;
+      font-size:16px;
+    }
+
+    @media (max-width:1100px){
+      .grid{ grid-template-columns: 1fr; }
+      .dates{ max-height:280px; }
+      .header-title h1{ font-size:32px; }
+      .header-title p{ font-size:18px; }
+      .title{ font-size:28px; }
+      .logo-group img{ height:64px; }
+    }
   </style>
 </head>
+
 <body>
-  <h1>Архив прогнозов</h1>
+  <div class="page-wrapper">
 
+    <!-- ШАПКА -->
+    <div class="header">
+      <div class="logo-group">
+        <img src="ii_logo_en.png" alt="Институт ионосферы">
+      </div>
 
-  <div class="wrap">
-    <div class="list">
-      <div class="muted" style="margin:6px 6px 10px;">Выбери дату:</div>
-      <div id="dates">Загрузка…</div>
+      <div class="header-title">
+        <h1>Институт ионосферы, Алматы, Казахстан</h1>
+        <p>Лаборатория диагностики и прогноза космической погоды</p>
+      </div>
+
+      <div class="logo-group" style="justify-content:flex-end;">
+        <img src="banner_lab.png" alt="Лаборатория космической погоды">
+      </div>
     </div>
 
-    <div class="panel">
-      <h2 id="title" style="margin-top:0;">Выбери дату слева</h2>
-      <div id="view" style="display:none;">
-        <div class="kpline"><b>Последнее обновление:</b> <span id="lu"></span></div>
-        <div class="kpline"><b>Kp (6 дней):</b> <span id="kp"></span></div>
-        <h3>Состояние околоземного космического пространства</h3>
-        <div id="st" style="white-space:pre-wrap;line-height:1.6;"></div>
+    <!-- КОНТЕНТ -->
+    <div class="main-wrapper">
+      <div class="top-row">
+        <h2 class="title">Архив прогнозов</h2>
 
-        <details style="margin-top:14px;">
-          <summary>Показать сырой JSON</summary>
-          <pre id="raw"></pre>
-        </details>
+        <div class="actions">
+          <a class="btn" href="index.html">← На главную</a>
+          <button class="btn" id="btn-clear">Очистить поиск</button>
+        </div>
       </div>
-      <div id="msg" class="muted">—</div>
+
+      <div class="grid">
+        <!-- левый блок -->
+        <div class="panel">
+          <h2>Поиск по дате</h2>
+          <p class="muted">Формат: <b>YYYY-MM-DD</b> (например: 2026-02-20). Можно вводить часть даты.</p>
+
+          <div class="search-wrap">
+            <input class="input" id="search" placeholder="Введите дату (например 2026-02-20)"/>
+          </div>
+
+          <div class="muted" id="count">Загрузка списка…</div>
+          <div class="dates" id="dates"></div>
+          <div class="empty" id="empty" style="display:none;">Нет совпадений по поиску.</div>
+        </div>
+
+        <!-- правый блок -->
+        <div class="panel">
+          <h2 id="view-title">Выберите дату слева</h2>
+
+          <div id="view" style="display:none;">
+            <div class="kv-line"><b>Последнее обновление:</b> <span id="lu">—</span></div>
+            <div class="kv-line"><b>Kp (6 дней):</b> <span id="kp">—</span></div>
+
+            <div class="box">
+              <h3 style="margin:0 0 8px;">Состояние околоземного космического пространства</h3>
+              <div class="status" id="st">—</div>
+            </div>
+
+            <details>
+              <summary>Показать сырой JSON</summary>
+              <pre id="raw"></pre>
+            </details>
+          </div>
+
+          <div class="muted" id="msg">—</div>
+        </div>
+      </div>
     </div>
   </div>
 
 <script>
-const API_LIST = "/api/archive";
-const API_ONE  = (d) => "/api/archive?date=" + encodeURIComponent(d);
+  const API_LIST = "/api/archive";
+  const API_ONE  = (d) => "/api/archive?date=" + encodeURIComponent(d);
 
-function formatDatesFromForecast(data){
-  // data.dates у тебя "DD.MM.YYYY"
-  return Array.isArray(data?.dates) ? data.dates.join(" • ") : "";
-}
+  let ALL_DATES = [];
 
-async function fetchJSON(url){
-  const r = await fetch(url, {cache:"no-store"});
-  const j = await r.json();
-  if(!j.ok) throw new Error(j.error || "Request failed");
-  return j;
-}
-
-async function loadList(){
-  const el = document.getElementById("dates");
-  const msg = document.getElementById("msg");
-  msg.textContent = "Загрузка списка…";
-
-  const j = await fetchJSON(API_LIST);
-  const dates = j.dates || [];
-
-  if(!dates.length){
-    el.textContent = "Архив пока пуст. Сохрани прогноз хотя бы один раз.";
-    msg.textContent = "";
-    return;
+  async function fetchJSON(url){
+    const r = await fetch(url, { cache: "no-store" });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || "Request failed");
+    return j;
   }
 
-  el.innerHTML = "";
-  msg.textContent = "Всего дат: " + dates.length;
+  function setMsg(text){
+    const msg = document.getElementById("msg");
+    msg.textContent = text || "";
+  }
 
-  dates.forEach((d, idx) => {
-    const btn = document.createElement("button");
-    btn.textContent = d;
-    btn.onclick = () => selectDate(d, btn);
-    el.appendChild(btn);
+  function formatKpLine(data){
+    // data.dates: "DD.MM.YYYY"
+    const dates = Array.isArray(data?.dates) ? data.dates.join(" • ") : "";
+    const kp = Array.isArray(data?.kp) ? data.kp.join(", ") : "";
+    if(!dates && !kp) return "—";
+    if(dates && kp) return `${dates} | ${kp}`;
+    return dates || kp;
+  }
 
-    // автоматически открыть самую свежую дату
-    if(idx === 0) setTimeout(()=>btn.click(), 0);
+  function renderDates(list){
+    const datesEl = document.getElementById("dates");
+    const emptyEl = document.getElementById("empty");
+    const countEl = document.getElementById("count");
+
+    datesEl.innerHTML = "";
+    emptyEl.style.display = "none";
+
+    if(!list.length){
+      countEl.textContent = "Совпадений: 0";
+      emptyEl.style.display = "block";
+      return;
+    }
+
+    countEl.textContent = "Дат: " + list.length;
+
+    list.forEach((d, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "date-btn";
+      btn.textContent = d;
+      btn.onclick = () => selectDate(d, btn);
+      datesEl.appendChild(btn);
+
+      // Автооткрытие самой свежей даты, если нет поиска
+      const q = (document.getElementById("search").value || "").trim();
+      if(idx === 0 && !q) setTimeout(() => btn.click(), 0);
+    });
+  }
+
+  async function selectDate(date, btn){
+    document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
+    if(btn) btn.classList.add("active");
+
+    const title = document.getElementById("view-title");
+    const view  = document.getElementById("view");
+
+    view.style.display = "none";
+    setMsg("Загрузка данных за " + date + "…");
+
+    try{
+      const j = await fetchJSON(API_ONE(date));
+      const data = j.data;
+
+      title.textContent = "Прогноз за " + date;
+      document.getElementById("lu").textContent = data.lastUpdate || data.savedAtAlmaty || "—";
+      document.getElementById("kp").textContent = formatKpLine(data);
+      document.getElementById("st").textContent = data.statusText || "—";
+      document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
+
+      setMsg("");
+      view.style.display = "block";
+    }catch(e){
+      setMsg("Ошибка: " + (e.message || e));
+    }
+  }
+
+  function applyFilter(){
+    const q = (document.getElementById("search").value || "").trim();
+    if(!q){
+      renderDates(ALL_DATES.slice());
+      return;
+    }
+
+    const filtered = ALL_DATES.filter(d => d.includes(q));
+    renderDates(filtered);
+
+    // Быстрый переход, если введена точная дата и она есть
+    if(filtered.length && filtered[0] === q){
+      // найдём кнопку и кликнем
+      const btns = Array.from(document.querySelectorAll(".date-btn"));
+      const b = btns.find(x => x.textContent === q);
+      if(b) b.click();
+    }
+  }
+
+  async function init(){
+    setMsg("Загрузка списка…");
+    try{
+      const j = await fetchJSON(API_LIST);
+      ALL_DATES = Array.isArray(j.dates) ? j.dates : [];
+      setMsg("");
+
+      if(!ALL_DATES.length){
+        document.getElementById("count").textContent = "Архив пуст. Сохраните прогноз хотя бы один раз.";
+        document.getElementById("empty").style.display = "block";
+        return;
+      }
+
+      renderDates(ALL_DATES.slice());
+    }catch(e){
+      setMsg("Ошибка загрузки архива: " + (e.message || e));
+      document.getElementById("count").textContent = "Ошибка";
+    }
+  }
+
+  document.getElementById("search").addEventListener("input", applyFilter);
+
+  document.getElementById("btn-clear").addEventListener("click", () => {
+    document.getElementById("search").value = "";
+    applyFilter();
   });
-}
 
-async function selectDate(date, btn){
-  document.querySelectorAll(".list button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-
-  const title = document.getElementById("title");
-  const view = document.getElementById("view");
-  const msg  = document.getElementById("msg");
-
-  msg.textContent = "Загрузка данных за " + date + "…";
-  view.style.display = "none";
-
-  try{
-    const j = await fetchJSON(API_ONE(date));
-    const data = j.data;
-
-    title.textContent = "Прогноз за " + date;
-    document.getElementById("lu").textContent = data.lastUpdate || data.savedAtAlmaty || "—";
-    document.getElementById("kp").textContent = formatDatesFromForecast(data) + " | " + (data.kp ? data.kp.join(", ") : "");
-    document.getElementById("st").textContent = data.statusText || "—";
-    document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
-
-    msg.textContent = "";
-    view.style.display = "block";
-  }catch(e){
-    msg.textContent = "Ошибка: " + (e.message || e);
-  }
-}
-
-loadList().catch(e => {
-  document.getElementById("dates").textContent = "Ошибка загрузки списка";
-  document.getElementById("msg").textContent = e.message || e;
-});
+  init();
 </script>
 </body>
 </html>
