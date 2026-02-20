@@ -109,6 +109,26 @@
     margin:10px 0 0;
     color:#e0e0e0;
   }
+  .header-links{
+  margin-top:12px;
+  font-size:18px;
+}
+
+.header-links a{
+  color:#ffffff;
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.10);
+  display:inline-block;
+  transition:all 0.2s ease;
+}
+
+.header-links a:hover{
+  background:rgba(255,255,255,0.18);
+  transform:translateY(-1px);
+}
 
   /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
   .main-wrapper{
@@ -389,10 +409,14 @@
       <img src="ii_logo_en.png" alt="Институт ионосферы">
     </div>
 
-    <div class="header-title">
-      <h1>Институт ионосферы, Алматы, Казахстан</h1>
-      <p>Лаборатория диагностики и прогноза космической погоды</p>
-    </div>
+   <div class="header-title">
+  <h1>Институт ионосферы, Алматы, Казахстан</h1>
+  <p>Лаборатория диагностики и прогноза космической погоды</p>
+
+  <div class="header-links">
+    <a href="archive.html">Архив прогнозов</a>
+  </div>
+</div>
 
     <div class="logo-group">
       <img src="banner_lab.png" alt="Лаборатория космической погоды">
@@ -1076,4 +1100,5 @@ setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 </script>
 </body>
 </html>
+
 
