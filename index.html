@@ -1001,13 +1001,79 @@ function downloadPNG(canvasId, fileName){
 
 /* ================= ИНИЦИАЛИЗАЦИЯ ================= */
 
-const initialData = loadData();
-if(!initialData.lastUpdate) initialData.lastUpdate = formatNowUtc();
-fillForm(initialData);
-renderKpChart(initialData);
+const API_FORECAST = "/api/forecast";
+const ADMIN_TOKEN_KEY = "sw_admin_token_session";
+
+async function fetchForecastFromServer(){
+  try{
+    const resp = await fetch(API_FORECAST, { cache: "no-store" });
+    const j = await resp.json();
+    return j && j.ok ? j.data : null;
+  }catch(e){
+    console.warn("Server fetch error:", e);
+    return null;
+  }
+}
+
+function getAdminToken(){
+  return sessionStorage.getItem(ADMIN_TOKEN_KEY) || "";
+}
+
+function ensureAdminToken(){
+  let t = getAdminToken();
+  if(t) return t;
+  t = prompt("Введите ADMIN TOKEN:");
+  if(t) sessionStorage.setItem(ADMIN_TOKEN_KEY, t.trim());
+  return t;
+}
+
+async function saveForecastToServer(data){
+  const token = ensureAdminToken();
+  if(!token) throw new Error("No token");
+
+  const resp = await fetch(API_FORECAST, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "X-Admin-Token": token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const j = await resp.json();
+  if(!j.ok) throw new Error(j.error || "Save failed");
+}
+
+document.getElementById("btn-save").onclick = async () => {
+  try{
+    const data = readForm();
+    data.lastUpdate = formatNowUtc();
+    document.getElementById("form-last-update").value = data.lastUpdate;
+
+    await saveForecastToServer(data);
+
+    renderKpChart(data);
+    document.getElementById("admin-panel").style.display = "none";
+    alert("Сохранено для всех пользователей ✅");
+  }catch(e){
+    alert("Ошибка: " + e.message);
+  }
+};
+
+(async () => {
+  const serverData = await fetchForecastFromServer();
+  const initialData = serverData || loadData() || defaultData;
+
+  fillForm(initialData);
+  renderKpChart(initialData);
+
+  loadAlmaDataFromTxt();
+  setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
+})();
 
 loadAlmaDataFromTxt();
 setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 </script>
 </body>
 </html>
+
