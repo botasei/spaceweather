@@ -110,25 +110,25 @@
     color:#e0e0e0;
   }
   .header-links{
-  margin-top:12px;
-  font-size:18px;
-}
+    margin-top:12px;
+    font-size:18px;
+  }
 
-.header-links a{
-  color:#ffffff;
-  text-decoration:none;
-  padding:6px 14px;
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.25);
-  background:rgba(255,255,255,0.10);
-  display:inline-block;
-  transition:all 0.2s ease;
-}
+  .header-links a{
+    color:#ffffff;
+    text-decoration:none;
+    padding:6px 14px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.10);
+    display:inline-block;
+    transition:all 0.2s ease;
+  }
 
-.header-links a:hover{
-  background:rgba(255,255,255,0.18);
-  transform:translateY(-1px);
-}
+  .header-links a:hover{
+    background:rgba(255,255,255,0.18);
+    transform:translateY(-1px);
+  }
 
   /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
   .main-wrapper{
@@ -226,13 +226,13 @@
     text-align:center;
     color:#fff;
   }
- .status-box p{
-  margin:0;
-  font-size:36px;      /* было 22px */
-  line-height:2.9;     /* чуть больше воздуха */
-  text-align:justify;
-  color:#f0f0f0;
-}
+  .status-box p{
+    margin:0;
+    font-size:36px;
+    line-height:2.9;
+    text-align:justify;
+    color:#f0f0f0;
+  }
 
   .export-buttons{
     margin-top:10px;
@@ -397,28 +397,29 @@
   @media (max-width:480px){
     .chart-wrap-alma{ height:260px; }
   }
-  /* ---------- FOOTER ---------- */
-.footer{
-  width:90vw;
-  max-width:var(--page-max-width);
-  margin:14px auto 0;
-  padding:12px 18px;
-  border-radius:12px;
-  text-align:center;
-  font-size:16px;
-  color:#e6e6e6;
 
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-}
-.footer small{
-  display:block;
-  line-height:1.5;
-  text-shadow:0 0 8px rgba(0,0,0,0.55);
-}
+  /* ---------- FOOTER ---------- */
+  .footer{
+    width:90vw;
+    max-width:var(--page-max-width);
+    margin:14px auto 0;
+    padding:12px 18px;
+    border-radius:12px;
+    text-align:center;
+    font-size:16px;
+    color:#e6e6e6;
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .footer small{
+    display:block;
+    line-height:1.5;
+    text-shadow:0 0 8px rgba(0,0,0,0.55);
+  }
 </style>
 </head>
 
@@ -431,14 +432,14 @@
       <img src="ii_logo_en.png" alt="Институт ионосферы">
     </div>
 
-   <div class="header-title">
-  <h1>Институт ионосферы, Алматы, Казахстан</h1>
-  <p>Лаборатория диагностики и прогноза космической погоды</p>
+    <div class="header-title">
+      <h1>Институт ионосферы, Алматы, Казахстан</h1>
+      <p>Лаборатория диагностики и прогноза космической погоды</p>
 
-  <div class="header-links">
-    <a href="archive.html">Архив прогнозов</a>
-  </div>
-</div>
+      <div class="header-links">
+        <a href="archive.html">Архив прогнозов</a>
+      </div>
+    </div>
 
     <div class="logo-group">
       <img src="banner_lab.png" alt="Лаборатория космической погоды">
@@ -503,7 +504,7 @@
       </div>
     </div>
 
-    <!-- Состояние околоземного космического пространства (под двумя верхними блоками) -->
+    <!-- Состояние околоземного космического пространства -->
     <div class="panel panel-bottom">
       <h2>Состояние околоземного космического пространства</h2>
       <p id="status-text">
@@ -723,7 +724,6 @@ const daySeparatorPlugin = {
         currentDay = day;
         startIndex = i;
 
-        // ✅ линия по границе (в начале столбика i), а не по центру столба
         if(i > 0){
           const xPrev = xScale.getPixelForValue(i - 1);
           const xCurr = xScale.getPixelForValue(i);
@@ -840,10 +840,12 @@ function readForm(){
   };
 }
 
-function autoFillDates(){
+/* ✅ автозаполняем даты только если поле пустое */
+function autoFillDatesIfEmpty(){
   const dates = generateForecastDates();
   for(let i=0;i<6;i++){
-    document.getElementById("date-"+i).value = dates[i];
+    const el = document.getElementById("date-"+i);
+    if(!el.value) el.value = dates[i];
   }
 }
 
@@ -851,18 +853,7 @@ document.getElementById("toggle-admin").onclick = () => {
   const p = document.getElementById("admin-panel");
   const isOpening = (p.style.display !== "block");
   p.style.display = isOpening ? "block" : "none";
-  if(isOpening) autoFillDates();
-};
-
-document.getElementById("btn-save").onclick = () => {
-  const data = readForm();
-  data.lastUpdate = formatNowUtc();
-  document.getElementById("form-last-update").value = data.lastUpdate;
-  saveData(data);
-  renderKpChart(data);
-
-  document.getElementById("admin-panel").style.display = "none";
-  setTimeout(() => location.reload(), 100);
+  if(isOpening) autoFillDatesIfEmpty();
 };
 
 document.getElementById("btn-reset").onclick = () => {
@@ -962,7 +953,6 @@ function renderAlmaKChart(labels, values){
     }
   });
 
-  // Если kaaa_last_update не доступен — покажем хотя бы время последней точки
   if(labels.length){
     const lastRaw = labels[labels.length - 1];
     const [datePart, timePartFull] = lastRaw.split(" ");
@@ -1017,11 +1007,9 @@ async function loadAlmaDataFromTxt(){
     const labels = fullLabels.slice(start);
     const values = fullValues.slice(start);
 
-    // очистим поле, renderAlmaKChart может поставить fallback из последней точки
     document.getElementById("alma-last-update").textContent = "";
     renderAlmaKChart(labels, values);
 
-    // ✅ Реальное время обновления (если файл доступен)
     if(updResp.ok){
       const updText = (await updResp.text()).trim();
       if(updText){
@@ -1045,7 +1033,7 @@ function downloadPNG(canvasId, fileName){
   link.click();
 }
 
-/* ================= ИНИЦИАЛИЗАЦИЯ ================= */
+/* ================= ИНИЦИАЛИЗАЦИЯ + SERVER API ================= */
 
 const API_FORECAST = "/api/forecast";
 const ADMIN_TOKEN_KEY = "sw_admin_token_session";
@@ -1090,20 +1078,22 @@ async function saveForecastToServer(data){
   if(!j.ok) throw new Error(j.error || "Save failed");
 }
 
+/* ✅ ЕДИНСТВЕННЫЙ обработчик сохранения (server + fallback local) */
 document.getElementById("btn-save").onclick = async () => {
+  const data = readForm();
+  data.lastUpdate = formatNowUtc();
+  document.getElementById("form-last-update").value = data.lastUpdate;
+
   try{
-    const data = readForm();
-    data.lastUpdate = formatNowUtc();
-    document.getElementById("form-last-update").value = data.lastUpdate;
-
     await saveForecastToServer(data);
-
-    renderKpChart(data);
-    document.getElementById("admin-panel").style.display = "none";
     alert("Сохранено для всех пользователей ✅");
   }catch(e){
-    alert("Ошибка: " + e.message);
+    saveData(data);
+    alert("Сервер недоступен. Сохранено локально (только в этом браузере).");
   }
+
+  renderKpChart(data);
+  document.getElementById("admin-panel").style.display = "none";
 };
 
 (async () => {
@@ -1116,20 +1106,12 @@ document.getElementById("btn-save").onclick = async () => {
   loadAlmaDataFromTxt();
   setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 })();
-
-loadAlmaDataFromTxt();
-setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 </script>
-  
-  <div class="footer">
+
+<div class="footer">
   <small>© Институт ионосферы, Алматы 2026</small>
   <small>Лаборатория диагностики и прогноза космической погоды</small>
 </div>
-  
+
 </body>
 </html>
-
-
-
-
-
