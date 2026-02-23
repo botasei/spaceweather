@@ -117,26 +117,6 @@
     margin:10px 0 0;
     color:#e0e0e0;
   }
-  .header-links{
-    margin-top:12px;
-    font-size:18px;
-  }
-
-  .header-links a{
-    color:#ffffff;
-    text-decoration:none;
-    padding:6px 14px;
-    border-radius:10px;
-    border:1px solid rgba(255,255,255,0.25);
-    background:rgba(255,255,255,0.10);
-    display:inline-block;
-    transition:all 0.2s ease;
-  }
-
-  .header-links a:hover{
-    background:rgba(255,255,255,0.18);
-    transform:translateY(-1px);
-  }
 
   /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
   .main-wrapper{
@@ -222,26 +202,6 @@
     color:#e2e2e2;
   }
 
-  .status-box{
-    margin-top:0;
-    padding:18px 20px;
-    border-radius:12px;
-  }
-
-  .status-box h2{
-    margin:0 0 12px;
-    font-size:32px;
-    text-align:center;
-    color:#fff;
-  }
-  .status-box p{
-    margin:0;
-    font-size:36px;
-    line-height:2.9;
-    text-align:justify;
-    color:#f0f0f0;
-  }
-
   .export-buttons{
     margin-top:10px;
     display:flex;
@@ -262,14 +222,6 @@
   .export-buttons button:hover{ background:rgba(255,255,255,0.18); }
 
   /* ---------- ЛЕГЕНДА ---------- */
-  .kp-label{
-    font-weight:bold;
-    text-align:center;
-    margin:10px 0 12px;
-    font-size:24px;
-    color:#fff;
-  }
-
   .legend-block{
     margin-top:4px;
     font-size:22px;
@@ -307,6 +259,23 @@
     text-align:left;
   }
   .ut-description strong{ color:#fff; }
+
+  /* ---------- Архив прогнозов (кнопка) ---------- */
+  .archive-btn{
+    display:inline-block;
+    padding:12px 28px;
+    font-size:22px;
+    border-radius:10px;
+    text-decoration:none;
+    color:#ffffff;
+    background:rgba(255,255,255,0.12);
+    border:1px solid rgba(255,255,255,0.25);
+    transition:all 0.2s ease;
+  }
+  .archive-btn:hover{
+    background:rgba(255,255,255,0.20);
+    transform:translateY(-1px);
+  }
 
   /* ---------- ADMIN ---------- */
   .admin-toggle{
@@ -443,10 +412,7 @@
     <div class="header-title">
       <h1>Институт ионосферы, Алматы, Казахстан</h1>
       <p>Лаборатория диагностики и прогноза космической погоды</p>
-
-      <div class="header-links">
-        <a href="archive.html">Архив прогнозов</a>
-      </div>
+      <!-- ✅ "Архив прогнозов" убран из шапки -->
     </div>
 
     <div class="logo-group">
@@ -476,10 +442,10 @@
 
       <!-- ПРАВАЯ КОЛОНКА -->
       <div class="right-column">
+        <!-- БОКС: Состояние магнитного поля -->
         <div class="panel">
           <h2>Состояние магнитного поля</h2>
-          <small>Kp-index - планетарный индекс геомагнитной активности</small>
-          
+
           <div class="legend-block">
             <div class="legend-row">
               <div class="legend-color kp-low"></div>
@@ -503,8 +469,16 @@
             </div>
             <div class="legend-row">
               <div class="legend-color kp-red4"></div>
-              Очень большая / экстремальная магнитная буря (Kp = 8–9)
+              Очень большая / экстремальная магнитная буря (Kp = 8–9) Kp-index - планетарный индекс геомагнитной активности
             </div>
+          </div>
+        </div>
+
+        <!-- ✅ НОВЫЙ БОКС: Архив прогнозов (после "Состояние магнитного поля") -->
+        <div class="panel">
+          <h2>Архив прогнозов</h2>
+          <div style="text-align:center; margin-top:10px;">
+            <a class="archive-btn" href="archive.html">Перейти в архив</a>
           </div>
         </div>
       </div>
@@ -1121,4 +1095,3 @@ document.getElementById("btn-save").onclick = async () => {
 
 </body>
 </html>
-
