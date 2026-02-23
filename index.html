@@ -51,20 +51,13 @@
     background:transparent;
   }
 
-  /* Увеличенный текст обзора космической погоды */
-  #status-text{
-    font-size:26px;
-    line-height:1.8;
-    color:#f0f0f0;
-    text-align:justify;
-  }
-
   /* glass для блоков */
   .header,
   .main-wrapper,
   .panel,
   .status-box,
-  .admin-panel{
+  .admin-panel,
+  .archive-box{
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -202,6 +195,15 @@
     color:#e2e2e2;
   }
 
+  /* ---------- текст обзора (увеличенный) ---------- */
+  #status-text{
+    font-size:26px;      /* делаем как просила */
+    line-height:1.8;
+    color:#f0f0f0;
+    text-align:justify;
+    margin:0;
+  }
+
   .export-buttons{
     margin-top:10px;
     display:flex;
@@ -260,20 +262,30 @@
   }
   .ut-description strong{ color:#fff; }
 
-  /* ---------- Архив прогнозов (кнопка) ---------- */
+  /* ---------- Архив в правой колонке ---------- */
+  .archive-box{
+    border-radius:12px;
+    padding:18px 20px;
+    text-align:center;
+  }
+  .archive-box h2{
+    margin:0 0 10px;
+    font-size:32px;
+    color:#fff;
+  }
   .archive-btn{
     display:inline-block;
-    padding:12px 28px;
-    font-size:22px;
+    padding:10px 18px;
     border-radius:10px;
-    text-decoration:none;
-    color:#ffffff;
-    background:rgba(255,255,255,0.12);
     border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.10);
+    color:#ffffff;
+    text-decoration:none;
+    font-size:18px;
     transition:all 0.2s ease;
   }
   .archive-btn:hover{
-    background:rgba(255,255,255,0.20);
+    background:rgba(255,255,255,0.18);
     transform:translateY(-1px);
   }
 
@@ -330,6 +342,8 @@
     outline:none;
   }
 
+  .admin-panel textarea{ min-height:180px; }
+
   .admin-panel input:focus,
   .admin-panel textarea:focus{
     border-color:rgba(255,255,255,0.45);
@@ -370,6 +384,7 @@
     .header-title h1{ font-size:36px; }
     .header-title p{ font-size:18px; }
     .title{ font-size:28px; }
+    #status-text{ font-size:22px; }
   }
   @media (max-width:480px){
     .chart-wrap-alma{ height:260px; }
@@ -412,7 +427,6 @@
     <div class="header-title">
       <h1>Институт ионосферы, Алматы, Казахстан</h1>
       <p>Лаборатория диагностики и прогноза космической погоды</p>
-      <!-- ✅ "Архив прогнозов" убран из шапки -->
     </div>
 
     <div class="logo-group">
@@ -442,7 +456,8 @@
 
       <!-- ПРАВАЯ КОЛОНКА -->
       <div class="right-column">
-        <!-- БОКС: Состояние магнитного поля -->
+
+        <!-- легенда -->
         <div class="panel">
           <h2>Состояние магнитного поля</h2>
 
@@ -474,22 +489,19 @@
           </div>
         </div>
 
-        <!-- ✅ НОВЫЙ БОКС: Архив прогнозов (после "Состояние магнитного поля") -->
-        <div class="panel">
+        <!-- архив отдельным боксом -->
+        <div class="archive-box">
           <h2>Архив прогнозов</h2>
-          <div style="text-align:center; margin-top:10px;">
-            <a class="archive-btn" href="archive.html">Перейти в архив</a>
-          </div>
+          <a class="archive-btn" href="archive.html">Перейти в архив</a>
         </div>
+
       </div>
     </div>
 
     <!-- Состояние околоземного космического пространства -->
     <div class="panel panel-bottom">
       <h2>Состояние околоземного космического пространства</h2>
-      <p id="status-text">
-        Обзор состояния космической погоды за период за 17-23 ноября октября и прогноз на 24-30 ноября 2025 года После экстремально - большой магнитной бури 12-13 ноября, наступило затишье. Количество активных областей почти не менялось: 3-4 АО. Количество солнечных пятен уменьшалось от 66 (17.11) до 45 (21.11), немногочисленные АО имели незначительные размеры, простую геомагнитную конфигурацию и находились в стадии стабильности или распада. В течение недели по всей площади диска регистрировались незначительные исчезновения солнечных волокон, выбросы которых не были направлены в сторону Земли. На видимой стороне солнечного диска присутствовала маленькая трансэкваториальная СН1331, вызвавшая незначительное возмущение магнитосферы Земли 21 ноября. 18 ноября на восточном краю диска появилась южная СН1332, наблюдавшаяся уже третий оборот. Воздействие потоков солнечного ветра из этой СН ожидается 24-27 ноября.
-      </p>
+      <p id="status-text">—</p>
     </div>
 
     <!-- НИЖНИЙ ГРАФИК: KAAA -->
@@ -555,7 +567,7 @@
     </div>
 
     <label>Последнее обновление</label>
-    <input id="form-last-update">
+    <input id="form-last-update" readonly>
 
     <label>Описание обстановки</label>
     <textarea id="form-status-text"></textarea>
@@ -565,6 +577,12 @@
       <button class="btn-save" id="btn-save">Сохранить</button>
     </div>
   </div>
+
+  <div class="footer">
+    <small>© Институт ионосферы, Алматы 2026</small>
+    <small>Лаборатория диагностики и прогноза космической погоды</small>
+  </div>
+
 </div>
 
 <!-- Chart.js -->
@@ -572,8 +590,6 @@
 
 <script>
 /* ================= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ================= */
-
-const STORAGE_KEY = "swKpForecast_v3";
 
 function pad2(n){ return n < 10 ? "0"+n : ""+n; }
 
@@ -627,21 +643,8 @@ const defaultData = {
   dates: generateForecastDates(),
   kp: [1,2,4,6,7,8],
   lastUpdate: "",
-  statusText: "Обзор состояния космической погоды за период за 17-23 ноября октября и прогноз на 24-30 ноября 2025 года После экстремально - большой магнитной бури 12-13 ноября, наступило затишье. Количество активных областей почти не менялось: 3-4 АО. Количество солнечных пятен уменьшалось от 66 (17.11) до 45 (21.11), немногочисленные АО имели незначительные размеры, простую геомагнитную конфигурацию и находились в стадии стабильности или распада. В течение недели по всей площади диска регистрировались незначительные исчезновения солнечных волокон, выбросы которых не были направлены в сторону Земли. На видимой стороне солнечного диска присутствовала маленькая трансэкваториальная СН1331, вызвавшая незначительное возмущение магнитосферы Земли 21 ноября. 18 ноября на восточном краю диска появилась южная СН1332, наблюдавшаяся уже третий оборот. Воздействие потоков солнечного ветра из этой СН ожидается 24-27 ноября."
+  statusText: "Нет данных."
 };
-
-function loadData(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return defaultData;
-    const parsed = JSON.parse(raw);
-    if(!parsed.dates || !parsed.kp) return defaultData;
-    return parsed;
-  }catch{
-    return defaultData;
-  }
-}
-function saveData(data){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 
 let kpChartInstance = null;
 
@@ -751,14 +754,14 @@ function renderKpChart(data){
   const ctx = document.getElementById("kpChart").getContext("2d");
   if(kpChartInstance) kpChartInstance.destroy();
 
-  const colors = data.kp.map(kpColor);
+  const colors = (data.kp || []).map(kpColor);
 
   kpChartInstance = new Chart(ctx, {
     type:"bar",
     data:{
-      labels:data.dates,
+      labels:data.dates || [],
       datasets:[{
-        data:data.kp,
+        data:data.kp || [],
         backgroundColor:colors,
         borderColor:"rgba(0,0,0,0.7)",
         borderWidth:1.4,
@@ -794,11 +797,10 @@ function renderKpChart(data){
 }
 
 /* ---------- ФОРМА ---------- */
-
 function fillForm(data){
   for(let i=0;i<6;i++){
-    document.getElementById("date-"+i).value = data.dates[i] || "";
-    document.getElementById("kp-"+i).value   = data.kp[i] ?? "";
+    document.getElementById("date-"+i).value = (data.dates && data.dates[i]) ? data.dates[i] : "";
+    document.getElementById("kp-"+i).value   = (data.kp && data.kp[i] != null) ? data.kp[i] : "";
   }
   document.getElementById("form-last-update").value = data.lastUpdate || "";
   document.getElementById("form-status-text").value = data.statusText || "";
@@ -829,19 +831,15 @@ function autoFillDatesIfEmpty(){
   }
 }
 
-document.getElementById("toggle-admin").onclick = () => {
-  const p = document.getElementById("admin-panel");
-  const isOpening = (p.style.display !== "block");
-  p.style.display = isOpening ? "block" : "none";
-  if(isOpening) autoFillDatesIfEmpty();
-};
-
-document.getElementById("btn-reset").onclick = () => {
-  const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
-  saveData(data);
-  fillForm(data);
-  renderKpChart(data);
-};
+/* ================= ЭКСПОРТ PNG ================= */
+function downloadPNG(canvasId, fileName){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = fileName || (canvasId + ".png");
+  link.click();
+}
 
 /* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА (KAAA) ================= */
 
@@ -867,15 +865,7 @@ function renderAlmaKChart(labels, values){
           const prevDay = labels[index-1].split(" ")[0];
           return (day !== prevDay) ? "#ffffff" : baseColor;
         },
-        borderWidth: function(context){
-          const index = context.dataIndex;
-          const labels = context.chart.data.labels;
-          if(!labels || index === 0) return 1;
-          const day = labels[index].split(" ")[0];
-          const prevDay = labels[index-1].split(" ")[0];
-          if(day !== prevDay) return { left:3, top:1, right:1, bottom:1 };
-          return 1;
-        },
+        borderWidth: 1,
         barThickness:"flex",
         barPercentage:0.9,
         categoryPercentage:1.0,
@@ -945,7 +935,7 @@ function renderAlmaKChart(labels, values){
   }
 }
 
-/* ✅ KAAA из GitHub (data/kaaa.txt) + реальное время обновления (data/kaaa_last_update.txt) */
+/* ✅ KAAA из GitHub/Cloudflare (data/kaaa.txt) + время обновления (data/kaaa_last_update.txt) */
 async function loadAlmaDataFromTxt(){
   try{
     const [dataResp, updResp] = await Promise.all([
@@ -981,7 +971,6 @@ async function loadAlmaDataFromTxt(){
       throw new Error("data/kaaa.txt: нет корректных значений K-индекса");
     }
 
-    // последние 12 точек
     const N = 12;
     const start = Math.max(0, fullLabels.length - N);
     const labels = fullLabels.slice(start);
@@ -997,37 +986,15 @@ async function loadAlmaDataFromTxt(){
       }
     }
   }catch(e){
-    console.error("Ошибка загрузки/обработки Alma KAAA:", e);
+    console.error("Ошибка Alma KAAA:", e);
     document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
   }
 }
 
-/* ================= ЭКСПОРТ PNG ================= */
-
-function downloadPNG(canvasId, fileName){
-  const canvas = document.getElementById(canvasId);
-  if(!canvas) return;
-  const link = document.createElement("a");
-  link.href = canvas.toDataURL("image/png");
-  link.download = fileName || (canvasId + ".png");
-  link.click();
-}
-
-/* ================= ИНИЦИАЛИЗАЦИЯ + SERVER API ================= */
+/* ================= CLOUDLFARE API (общий прогноз) ================= */
 
 const API_FORECAST = "/api/forecast";
 const ADMIN_TOKEN_KEY = "sw_admin_token_session";
-
-async function fetchForecastFromServer(){
-  try{
-    const resp = await fetch(API_FORECAST, { cache: "no-store" });
-    const j = await resp.json();
-    return j && j.ok ? j.data : null;
-  }catch(e){
-    console.warn("Server fetch error:", e);
-    return null;
-  }
-}
 
 function getAdminToken(){
   return sessionStorage.getItem(ADMIN_TOKEN_KEY) || "";
@@ -1036,9 +1003,21 @@ function getAdminToken(){
 function ensureAdminToken(){
   let t = getAdminToken();
   if(t) return t;
+
   t = prompt("Введите ADMIN TOKEN:");
   if(t) sessionStorage.setItem(ADMIN_TOKEN_KEY, t.trim());
   return t;
+}
+
+async function fetchForecastFromServer(){
+  try{
+    const resp = await fetch(API_FORECAST, { cache: "no-store" });
+    const j = await resp.json();
+    return (j && j.ok) ? j.data : null;
+  }catch(e){
+    console.warn("Server fetch error:", e);
+    return null;
+  }
 }
 
 async function saveForecastToServer(data){
@@ -1054,31 +1033,46 @@ async function saveForecastToServer(data){
     body: JSON.stringify(data)
   });
 
-  const j = await resp.json();
-  if(!j.ok) throw new Error(j.error || "Save failed");
+  const j = await resp.json().catch(() => null);
+  if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Save failed");
 }
 
-/* ✅ ЕДИНСТВЕННЫЙ обработчик сохранения (server + fallback local) */
-document.getElementById("btn-save").onclick = async () => {
-  const data = readForm();
-  data.lastUpdate = formatNowUtc();
-  document.getElementById("form-last-update").value = data.lastUpdate;
+/* ================= UI handlers ================= */
 
+document.getElementById("toggle-admin").onclick = () => {
+  const p = document.getElementById("admin-panel");
+  const isOpening = (p.style.display !== "block");
+  p.style.display = isOpening ? "block" : "none";
+  if(isOpening) autoFillDatesIfEmpty();
+};
+
+document.getElementById("btn-save").onclick = async () => {
   try{
+    const data = readForm();
+    data.lastUpdate = formatNowUtc();
+    document.getElementById("form-last-update").value = data.lastUpdate;
+
     await saveForecastToServer(data);
+
+    renderKpChart(data);
+    document.getElementById("admin-panel").style.display = "none";
     alert("Сохранено для всех пользователей ✅");
   }catch(e){
-    saveData(data);
-    alert("Сервер недоступен. Сохранено локально (только в этом браузере).");
+    alert("Ошибка: " + e.message);
   }
-
-  renderKpChart(data);
-  document.getElementById("admin-panel").style.display = "none";
 };
+
+document.getElementById("btn-reset").onclick = () => {
+  const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
+  fillForm(data);
+  renderKpChart(data);
+};
+
+/* ================= INIT ================= */
 
 (async () => {
   const serverData = await fetchForecastFromServer();
-  const initialData = serverData || loadData() || defaultData;
+  const initialData = serverData || { ...defaultData, lastUpdate: formatNowUtc() };
 
   fillForm(initialData);
   renderKpChart(initialData);
@@ -1087,11 +1081,6 @@ document.getElementById("btn-save").onclick = async () => {
   setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 })();
 </script>
-
-<div class="footer">
-  <small>© Институт ионосферы, Алматы 2026</small>
-  <small>Лаборатория диагностики и прогноза космической погоды</small>
-</div>
 
 </body>
 </html>
