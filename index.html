@@ -50,13 +50,14 @@
     z-index:1;
     background:transparent;
   }
+
   /* Увеличенный текст обзора космической погоды */
-#status-text{
-  font-size:26px;      /* такой же как ut-description */
-  line-height:1.8;
-  color:#f0f0f0;
-  text-align:justify;
-}
+  #status-text{
+    font-size:26px;
+    line-height:1.8;
+    color:#f0f0f0;
+    text-align:justify;
+  }
 
   /* glass для блоков */
   .header,
@@ -479,7 +480,8 @@
           <h2>Состояние магнитного поля</h2>
           <small>Kp-index - планетарный индекс геомагнитной активности</small>
 
-          <div class=</div>
+          <!-- ✅ ИСПРАВЛЕНО: вместо битого <div class=</div> -->
+          <div class="kp-label">Интерпретация значений индекса Kp</div>
 
           <div class="legend-block">
             <div class="legend-row">
@@ -1122,8 +1124,3 @@ document.getElementById("btn-save").onclick = async () => {
 
 </body>
 </html>
-
-
-
-
-
