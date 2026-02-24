@@ -226,11 +226,13 @@
       color:#fff;
       cursor:pointer;
       font-size:16px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
     }
     .date-btn:hover{ background:rgba(255,255,255,0.12); }
     .date-btn.active{
       background:rgba(255,255,255,0.18);
       border-color:rgba(255,255,255,0.35);
+      transform: translateY(-1px);
     }
 
     /* просмотр */
@@ -249,9 +251,7 @@
       padding:12px;
     }
 
-    details{
-      margin-top:12px;
-    }
+    details{ margin-top:12px; }
     summary{
       cursor:pointer;
       color:#fff;
@@ -280,6 +280,79 @@
       padding:10px 0;
       color:#e6e6e6;
       font-size:16px;
+    }
+
+    /* ---------- KP ЧИПЫ + MAX BADGE ---------- */
+    .kp-summary{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+
+    .kp-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.22);
+      background:rgba(255,255,255,0.10);
+      font-size:14px;
+      color:#fff;
+      white-space:nowrap;
+    }
+    .kp-badge .dot{
+      width:10px; height:10px; border-radius:50%;
+      border:1px solid rgba(0,0,0,0.55);
+      display:inline-block;
+    }
+
+    .kp-chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .kp-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(0,0,0,0.18);
+      color:#fff;
+      font-size:14px;
+      white-space:nowrap;
+    }
+
+    .kp-chip .tag{
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(0,0,0,0.55);
+      color:#fff;
+      font-weight:bold;
+      min-width:28px;
+      text-align:center;
+    }
+
+    .kp0_3{ background:#00b050; }
+    .kp4{ background:#ffd800; color:#000; border-color: rgba(0,0,0,0.35); }
+    .kp5{ background:#ff3b3b; }
+    .kp6{ background:#e00000; }
+    .kp7{ background:#b00000; }
+    .kp8_9{ background:#800000; }
+
+    /* ---------- FADE IN ---------- */
+    @keyframes fadeInUp{
+      from{ opacity:0; transform: translateY(10px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+    .fade-in{
+      animation: fadeInUp 420ms ease-out both;
     }
 
     @media (max-width:1100px){
@@ -344,7 +417,19 @@
 
           <div id="view" style="display:none;">
             <div class="kv-line"><b>Последнее обновление:</b> <span id="lu">—</span></div>
-            <div class="kv-line"><b>Kp (6 дней):</b> <span id="kp">—</span></div>
+
+            <!-- ✅ чипы и max kp -->
+            <div class="kv-line" style="margin-bottom:6px;"><b>Kp (6 дней):</b></div>
+            <div class="kp-summary">
+              <div class="kp-chips" id="kp-chips"></div>
+              <div class="kp-badge" id="kp-badge" style="display:none;">
+                <span class="dot" id="kp-badge-dot"></span>
+                <span><b>max Kp:</b> <span id="kp-max">—</span></span>
+              </div>
+            </div>
+
+            <!-- (оставим старую строку, но спрячем — на всякий случай) -->
+            <div class="kv-line" id="kp-old" style="display:none;"><b>Kp (6 дней):</b> <span id="kp">—</span></div>
 
             <div class="box">
               <h3 style="margin:0 0 8px;">Состояние околоземного космического пространства</h3>
@@ -390,6 +475,79 @@
     return dates || kp;
   }
 
+  function kpClass(kp){
+    const v = Number(kp);
+    if(Number.isNaN(v)) return "";
+    if(v <= 3) return "kp0_3";
+    if(v === 4) return "kp4";
+    if(v === 5) return "kp5";
+    if(v === 6) return "kp6";
+    if(v === 7) return "kp7";
+    return "kp8_9";
+  }
+
+  function shortDDMM(dmy){
+    // "24.02.2026" -> "24.02"
+    if(typeof dmy !== "string") return "";
+    const parts = dmy.split(".");
+    if(parts.length < 2) return dmy;
+    return parts[0] + "." + parts[1];
+  }
+
+  function renderKpChips(data){
+    const chipsEl = document.getElementById("kp-chips");
+    const badgeEl = document.getElementById("kp-badge");
+    const badgeDot = document.getElementById("kp-badge-dot");
+    const maxEl = document.getElementById("kp-max");
+
+    chipsEl.innerHTML = "";
+    badgeEl.style.display = "none";
+    maxEl.textContent = "—";
+    badgeDot.className = "dot";
+
+    const dates = Array.isArray(data?.dates) ? data.dates : [];
+    const kp = Array.isArray(data?.kp) ? data.kp : [];
+
+    const pairs = [];
+    for(let i=0;i<Math.max(dates.length, kp.length);i++){
+      const di = dates[i];
+      const ki = kp[i];
+      if(di == null && ki == null) continue;
+      pairs.push({ d: di, k: ki });
+    }
+
+    if(!pairs.length){
+      chipsEl.innerHTML = "<div class='muted'>—</div>";
+      return;
+    }
+
+    // chips
+    pairs.forEach(item => {
+      const chip = document.createElement("span");
+      chip.className = "kp-chip";
+
+      const tag = document.createElement("span");
+      tag.className = "tag " + kpClass(item.k);
+      tag.textContent = (item.k == null || item.k === "") ? "—" : String(item.k);
+
+      const t = document.createElement("span");
+      t.textContent = shortDDMM(item.d || "");
+
+      chip.appendChild(t);
+      chip.appendChild(tag);
+      chipsEl.appendChild(chip);
+    });
+
+    // max badge
+    const nums = pairs.map(x => Number(x.k)).filter(v => !Number.isNaN(v));
+    if(nums.length){
+      const max = Math.max(...nums);
+      maxEl.textContent = String(max);
+      badgeDot.classList.add(kpClass(max));
+      badgeEl.style.display = "inline-flex";
+    }
+  }
+
   function renderDates(list){
     const datesEl = document.getElementById("dates");
     const emptyEl = document.getElementById("empty");
@@ -421,12 +579,17 @@
 
   async function selectDate(date, btn){
     document.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
-    if(btn) btn.classList.add("active");
+    if(btn){
+      btn.classList.add("active");
+      // ✅ чтобы выбранная дата всегда была видна
+      btn.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
 
     const title = document.getElementById("view-title");
     const view  = document.getElementById("view");
 
     view.style.display = "none";
+    view.classList.remove("fade-in");
     setMsg("Загрузка данных за " + date + "…");
 
     try{
@@ -435,12 +598,22 @@
 
       title.textContent = "Прогноз за " + date;
       document.getElementById("lu").textContent = data.lastUpdate || data.savedAtAlmaty || "—";
+
+      // старую строку оставляем скрытой (на всякий)
       document.getElementById("kp").textContent = formatKpLine(data);
+
+      // ✅ новые чипы + max
+      renderKpChips(data);
+
       document.getElementById("st").textContent = data.statusText || "—";
       document.getElementById("raw").textContent = JSON.stringify(data, null, 2);
 
       setMsg("");
       view.style.display = "block";
+
+      // ✅ fade in (перезапуск анимации)
+      void view.offsetWidth;
+      view.classList.add("fade-in");
     }catch(e){
       setMsg("Ошибка: " + (e.message || e));
     }
@@ -458,7 +631,6 @@
 
     // Быстрый переход, если введена точная дата и она есть
     if(filtered.length && filtered[0] === q){
-      // найдём кнопку и кликнем
       const btns = Array.from(document.querySelectorAll(".date-btn"));
       const b = btns.find(x => x.textContent === q);
       if(b) b.click();
