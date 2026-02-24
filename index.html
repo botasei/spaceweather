@@ -32,7 +32,12 @@
     background-position:center;
     background-repeat:no-repeat;
     background-attachment:fixed;
+
+    /* ✅ fade-in */
+    opacity:0;
+    transition:opacity .6s ease;
   }
+  body.loaded{ opacity:1; }
 
   body::before{
     content:"";
@@ -120,19 +125,19 @@
 }
 
 .header-sub{
-  font-size:38px;     /* было 32px */
+  font-size:38px;
   margin:10px 0 0;
   color:#e6e6e6;
   font-weight:500;
   letter-spacing:0.5px;
 }
-  .header-sub:first-of-type{
+
+/* ✅ лёгкая иерархия */
+.header-sub:first-of-type{
   font-size:40px;     /* Институт ионосферы */
 }
-
 .header-sub:last-of-type{
   font-size:34px;     /* Алматы, Казахстан */
-}
 }
 
 /* адаптив шапки */
@@ -191,7 +196,7 @@
     display:flex;
     flex-direction:column;
     gap:16px;
-    flex:1.4; /* было 1.2 */
+    flex:1.4;
   }
 
   .panel-bottom{
@@ -240,7 +245,7 @@
 
   /* ---------- текст обзора (увеличенный) ---------- */
   #status-text{
-    font-size:26px;      /* делаем как просила */
+    font-size:26px;
     line-height:1.8;
     color:#f0f0f0;
     text-align:justify;
@@ -1072,6 +1077,7 @@ async function loadAlmaDataFromTxt(){
 /* ================= CLOUDLFARE API (общий прогноз) ================= */
 
 const API_FORECAST = "/api/forecast";
+const API_ARCHIVE  = "/api/archive";  /* ✅ архив */
 const ADMIN_TOKEN_KEY = "sw_admin_token_session";
 
 function getAdminToken(){
@@ -1115,6 +1121,24 @@ async function saveForecastToServer(data){
   if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Save failed");
 }
 
+/* ✅ сохранение в архив */
+async function saveArchiveToServer(data){
+  const token = ensureAdminToken();
+  if(!token) throw new Error("No token");
+
+  const resp = await fetch(API_ARCHIVE, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "X-Admin-Token": token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const j = await resp.json().catch(() => null);
+  if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Archive save failed");
+}
+
 /* ================= UI handlers ================= */
 
 document.getElementById("toggle-admin").onclick = () => {
@@ -1131,6 +1155,7 @@ document.getElementById("btn-save").onclick = async () => {
     document.getElementById("form-last-update").value = data.lastUpdate;
 
     await saveForecastToServer(data);
+    await saveArchiveToServer(data); /* ✅ добавили архивирование */
 
     renderKpChart(data);
     document.getElementById("admin-panel").style.display = "none";
@@ -1158,9 +1183,12 @@ document.getElementById("btn-reset").onclick = () => {
   loadAlmaDataFromTxt();
   setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 })();
+
+/* ✅ fade-in включаем после полной загрузки */
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
 </script>
 
 </body>
 </html>
-
-
