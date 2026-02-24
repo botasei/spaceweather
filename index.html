@@ -858,19 +858,30 @@ function renderKpChart(data){
           grid:{ color:"rgba(255,255,255,0.25)" },
           title:{ display:true, text:"Kp-index", color:"#ffffff", font:{ size:24 } }
         },
-        x:{
-          /* ✅ чтобы подписи были ровно под столбцами */
-          grid:{ display:false, offset:true },
-          ticks:{
-            color:"#ffffff",
-            align:"center",
-            maxRotation:0,
-            minRotation:0,
-            /* ✅ единый стиль шрифта (как на сайте) */
-            font:{ size:22, family:"Arial", weight:"bold" }
-          },
-          title:{ display:true, text:"Дата", color:"#ffffff", font:{ size:24 } }
-        }
+       x:{
+  grid:{ display:false, offset:true },
+  ticks:{
+    color:"#ffffff",
+    align:"center",
+    maxRotation:0,
+    minRotation:0,
+    font:{
+      family:"Arial",
+      size:22,
+      weight:"normal"   // ← убираем жирность
+    }
+  },
+  title:{
+    display:true,
+    text:"Дата",
+    color:"#ffffff",
+    font:{
+      family:"Arial",
+      size:24,
+      weight:"normal"   // ← делаем как у Kp-index
+    }
+  }
+}
       }
     }
   });
@@ -1192,3 +1203,4 @@ window.addEventListener("load", () => {
 
 </body>
 </html>
+
