@@ -24,6 +24,9 @@
     color:#f0f0f0;
     font-size:18px;
 
+    /* ✅ чтобы цифры были ровнее (если шрифт поддерживает tabular-nums) */
+    font-variant-numeric: tabular-nums;
+
     background-image:url("background_sun.jpg");
     background-size:cover;
     background-position:center;
@@ -828,8 +831,16 @@ function renderKpChart(data){
           title:{ display:true, text:"Kp-index", color:"#ffffff", font:{ size:24 } }
         },
         x:{
-          ticks:{ color:"#ffffff", font:{ size:22 } },
-          grid:{ display:false },
+          /* ✅ чтобы подписи были ровно под столбцами */
+          grid:{ display:false, offset:true },
+          ticks:{
+            color:"#ffffff",
+            align:"center",
+            maxRotation:0,
+            minRotation:0,
+            /* ✅ моноширинные цифры = даты стоят ровно */
+            font:{ size:22, family:"Consolas, 'Courier New', monospace", weight:"bold" }
+          },
           title:{ display:true, text:"Дата", color:"#ffffff", font:{ size:24 } }
         }
       }
@@ -1128,6 +1139,3 @@ document.getElementById("btn-reset").onclick = () => {
 
 </body>
 </html>
-
-
-
