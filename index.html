@@ -84,7 +84,7 @@
 
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:22px; /* ✅ больше расстояния между эмблемами и текстом */
 }
 
 .header-top{
@@ -109,24 +109,27 @@
   padding:0 10px;
 }
 
+/* ✅ новая типографика шапки */
 .header-bottom h1{
-  font-size:52px;
+  font-size:48px;
   margin:0;
+  line-height:1.2;
+  color:#ffffff;
+  font-weight:700;
   letter-spacing:0.5px;
-  color:#fff;
-  line-height:1.15;
 }
 
-.header-bottom p{
-  font-size:26px;
-  margin:10px 0 0;
-  color:#e0e0e0;
+.header-sub{
+  font-size:24px;
+  margin:6px 0 0;
+  color:#d6d6d6;
+  font-weight:400;
 }
 
 /* адаптив шапки */
 @media (max-width:1100px){
   .header-bottom h1{ font-size:40px; }
-  .header-bottom p{ font-size:20px; }
+  .header-sub{ font-size:20px; }
   .logo-group img{ height:80px; }
 }
 
@@ -138,7 +141,7 @@
   }
   .logo-group img{ height:78px; }
   .header-bottom h1{ font-size:30px; }
-  .header-bottom p{ font-size:16px; }
+  .header-sub{ font-size:16px; }
 }
 
   /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
@@ -172,13 +175,14 @@
     box-sizing:border-box;
   }
 
-  .panel-wide{ flex:1.6; }
+  /* ✅ баланс колонок */
+  .panel-wide{ flex:1.4; }
 
   .right-column{
     display:flex;
     flex-direction:column;
     gap:16px;
-    flex:1.2;
+    flex:1.4; /* было 1.2 */
   }
 
   .panel-bottom{
@@ -275,6 +279,12 @@
     border-radius:3px;
   }
 
+  /* ✅ длинная строка — немного меньше и без переноса */
+  .legend-row-long{
+    font-size:20px;
+    white-space:nowrap;
+  }
+
   .kp-low{background:#00b050;}
   .kp-yellow{background:#ffd800;}
   .kp-red1{background:#ff3b3b;}
@@ -283,12 +293,12 @@
   .kp-red4{background:#800000;}
 
   .kp-comment{
-  margin-top:16px;
-  font-size:20px;
-  line-height:1.6;
-  opacity:0.85;
-  font-style:italic;
-}
+    margin-top:16px;
+    font-size:20px;
+    line-height:1.6;
+    opacity:0.85;
+    font-style:italic;
+  }
 
   /* ---------- UT ---------- */
   .ut-description{
@@ -473,8 +483,9 @@
 
   <!-- 2-я строка: текст под эмблемами -->
   <div class="header-bottom">
-    <h1>Институт ионосферы, Алматы, Казахстан</h1>
-    <p>Лаборатория диагностики и прогноза космической погоды</p>
+    <h1>Лаборатория диагностики и прогноза космической погоды</h1>
+    <p class="header-sub">Институт ионосферы</p>
+    <p class="header-sub">Алматы, Казахстан</p>
   </div>
 </div>
 
@@ -526,13 +537,16 @@
               <div class="legend-color kp-red3"></div>
               Большая магнитная буря (Kp = 7)
             </div>
-            <div class="legend-row">
+
+            <!-- ✅ длинная строка без переноса -->
+            <div class="legend-row legend-row-long">
               <div class="legend-color kp-red4"></div>
               Очень большая / экстремальная магнитная буря (Kp = 8–9)
             </div>
+
             <div class="kp-comment">
-  Kp-index — планетарный индекс геомагнитной активности
-</div>
+              Kp-index — планетарный индекс геомагнитной активности
+            </div>
           </div>
         </div>
 
@@ -838,8 +852,8 @@ function renderKpChart(data){
             align:"center",
             maxRotation:0,
             minRotation:0,
-            /* ✅ моноширинные цифры = даты стоят ровно */
-            font:{ size:22, family:"Consolas, 'Courier New', monospace", weight:"bold" }
+            /* ✅ единый стиль шрифта (как на сайте) */
+            font:{ size:22, family:"Arial", weight:"bold" }
           },
           title:{ display:true, text:"Дата", color:"#ffffff", font:{ size:24 } }
         }
