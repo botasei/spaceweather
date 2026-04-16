@@ -917,11 +917,10 @@ function readForm(){
 }
 
 /* ✅ автозаполняем даты только если поле пустое */
-function autoFillDatesIfEmpty(){
+function autoFillDates(){
   const dates = generateForecastDates();
   for(let i=0;i<6;i++){
-    const el = document.getElementById("date-"+i);
-    if(!el.value) el.value = dates[i];
+    document.getElementById("date-"+i).value = dates[i];
   }
 }
 
@@ -1156,7 +1155,10 @@ document.getElementById("toggle-admin").onclick = () => {
   const p = document.getElementById("admin-panel");
   const isOpening = (p.style.display !== "block");
   p.style.display = isOpening ? "block" : "none";
-  if(isOpening) autoFillDatesIfEmpty();
+  if(isOpening){
+  autoFillDates();
+  document.getElementById("form-last-update").value = formatNowUtc();
+}
 };
 
 document.getElementById("btn-save").onclick = async () => {
