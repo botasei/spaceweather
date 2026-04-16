@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Прогноз геомагнитной активности — Институт ионосферы</title>
+
+<style>
+  :root{
+    --page-max-width: 1700px;
+
+    /* Glass */
+    --glass-bg: rgba(10, 15, 25, 0.28);
+    --glass-border: rgba(255,255,255,0.22);
+    --glass-blur: 12px;
+    --glass-shadow: 0 8px 30px rgba(0,0,0,0.25);
+
+    /* фон */
+    --bg-dim: rgba(0,0,0,0.33);
+  }
+
+  body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    color:#f0f0f0;
+    font-size:18px;
+
+    /* ✅ чтобы цифры были ровнее (если шрифт поддерживает tabular-nums) */
+    font-variant-numeric: tabular-nums;
+
+    background-image:url("background_sun.jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+
+    /* ✅ fade-in */
+    opacity:0;
+    transition:opacity .6s ease;
+  }
+  body.loaded{ opacity:1; }
+
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:var(--bg-dim);
+    z-index:-1;
+  }
+
+  .page-wrapper{
+    min-height:100vh;
+    padding:10px 0 40px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    position:relative;
+    z-index:1;
+    background:transparent;
+  }
+
+  /* glass для блоков */
+  .header,
+  .main-wrapper,
+  .panel,
+  .status-box,
+  .admin-panel,
+  .archive-box{
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* читаемость */
+  h1,h2,h3,p,small,.legend-block,.ut-description,.title,.kp-label,.last-update{
+    text-shadow:0 0 8px rgba(0,0,0,0.55);
+  }
+
+ /* ---------- ШАПКА (2 строки) ---------- */
+.header{
+  width:90vw;
+  max-width:var(--page-max-width);
+  margin:0 auto;
+  padding:16px 18px 14px;
+  box-sizing:border-box;
+  border-radius:12px;
+
+  display:flex;
+  flex-direction:column;
+  gap:44px; /* ✅ больше расстояния между эмблемами и текстом */
+}
+
+.header-top{
+  display:grid;
+  grid-template-columns: auto 1fr auto;
+  align-items:center;
+  column-gap:16px;
+}
+
+.logo-group img{
+  height:90px;
+  object-fit:contain;
+  display:block;
+}
+.logo-group.right img{
+  max-width:420px;
+}
+.header-spacer{ width:100%; }
+
+.header-bottom{
+  text-align:center;
+  padding:0 10px;
+}
+
+/* ✅ новая типографика шапки */
+.header-bottom h1{
+  font-size:48px;
+  margin:0;
+  line-height:1.2;
+  color:#ffffff;
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+.header-sub{
+  font-size:38px;
+  margin:10px 0 0;
+  color:#e6e6e6;
+  font-weight:500;
+  letter-spacing:0.5px;
+}
+
+/* ✅ лёгкая иерархия */
+.header-sub:first-of-type{
+  font-size:40px;     /* Институт ионосферы */
+}
+.header-sub:last-of-type{
+  font-size:34px;     /* Алматы, Казахстан */
+}
+
+/* адаптив шапки */
+@media (max-width:1100px){
+  .header-bottom h1{ font-size:40px; }
+  .header-sub{ font-size:20px; }
+  .logo-group img{ height:80px; }
+}
+
+@media (max-width:768px){
+  .header-top{
+    grid-template-columns: 1fr;
+    row-gap:10px;
+    justify-items:center;
+  }
+  .logo-group img{ height:78px; }
+  .header-bottom h1{ font-size:30px; }
+  .header-sub{ font-size:16px; }
+}
+
+  /* ---------- ОСНОВНОЙ КОНТЕЙНЕР ---------- */
+  .main-wrapper{
+    width:90vw;
+    max-width:var(--page-max-width);
+    margin:14px auto 0;
+    border-radius:12px;
+    padding:22px 26px 26px;
+    box-sizing:border-box;
+  }
+
+  .title{
+    text-align:center;
+    font-size:40px;
+    margin-bottom:22px;
+    font-weight:bold;
+    color:#fff;
+  }
+
+  .content-row{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    gap:22px;
+  }
+
+  .panel{
+    border-radius:12px;
+    padding:20px;
+    box-sizing:border-box;
+  }
+
+  /* ✅ баланс колонок */
+  .panel-wide{ flex:1.4; }
+
+  .right-column{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    flex:1.4;
+  }
+
+  .panel-bottom{
+    width:100%;
+    margin-top:28px;
+  }
+
+  .panel h2{
+    margin:0 0 8px;
+    font-size:32px;
+    text-align:center;
+    color:#fff;
+  }
+
+  .panel small{
+    display:block;
+    text-align:left;
+    font-size:22px;
+    margin-bottom:8px;
+    color:#e2e2e2;
+  }
+
+  /* ---------- ГРАФИКИ ---------- */
+  #kpChart{
+    width:100%;
+    height:580px !important;
+    background-color:transparent;
+  }
+
+  /* alma chart wrapper */
+  .chart-wrap{ position:relative; width:100%; }
+  .chart-wrap-alma{ height:360px; }
+  .chart-wrap-alma canvas{
+    width:100% !important;
+    height:100% !important;
+    display:block;
+    background:transparent;
+  }
+
+  .last-update{
+    font-size:20px;
+    margin-top:10px;
+    text-align:left;
+    color:#e2e2e2;
+  }
+
+  /* ---------- текст обзора (увеличенный) ---------- */
+  #status-text{
+    font-size:26px;
+    line-height:1.8;
+    color:#f0f0f0;
+    text-align:justify;
+    margin:0;
+  }
+
+  .export-buttons{
+    margin-top:10px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .export-buttons button{
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.28);
+    padding:6px 16px;
+    font-size:18px;
+    cursor:pointer;
+    box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  }
+  .export-buttons button:hover{ background:rgba(255,255,255,0.18); }
+
+  /* ---------- ЛЕГЕНДА ---------- */
+  .legend-block{
+    margin-top:4px;
+    font-size:22px;
+    line-height:1.6;
+    color:#f0f0f0;
+  }
+
+  .legend-row{
+    display:flex;
+    align-items:center;
+    margin-bottom:4px;
+  }
+
+  .legend-color{
+    width:18px;
+    height:18px;
+    border:1px solid rgba(0,0,0,0.7);
+    margin-right:10px;
+    border-radius:3px;
+  }
+
+  /* ✅ длинная строка — немного меньше и без переноса */
+  .legend-row-long{
+    font-size:20px;
+    white-space:nowrap;
+  }
+
+  .kp-low{background:#00b050;}
+  .kp-yellow{background:#ffd800;}
+  .kp-red1{background:#ff3b3b;}
+  .kp-red2{background:#e00000;}
+  .kp-red3{background:#b00000;}
+  .kp-red4{background:#800000;}
+
+  .kp-comment{
+    margin-top:16px;
+    font-size:20px;
+    line-height:1.6;
+    opacity:0.85;
+    font-style:italic;
+  }
+
+  /* ---------- UT ---------- */
+  .ut-description{
+    margin-top:12px;
+    font-size:22px;
+    line-height:1.6;
+    color:#e6e6e6;
+    text-align:left;
+  }
+  .ut-description strong{ color:#fff; }
+
+  /* ---------- Архив в правой колонке ---------- */
+  .archive-box{
+    border-radius:12px;
+    padding:18px 20px;
+    text-align:center;
+  }
+  .archive-box h2{
+    margin:0 0 10px;
+    font-size:32px;
+    color:#fff;
+  }
+  .archive-btn{
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.25);
+    background:rgba(255,255,255,0.10);
+    color:#ffffff;
+    text-decoration:none;
+    font-size:18px;
+    transition:all 0.2s ease;
+  }
+  .archive-btn:hover{
+    background:rgba(255,255,255,0.18);
+    transform:translateY(-1px);
+  }
+
+  /* ---------- ADMIN ---------- */
+
+  .admin-panel{
+    width:90vw;
+    max-width:var(--page-max-width);
+    margin:14px auto 20px;
+    padding:18px 22px;
+    border-radius:12px;
+    font-size:18px;
+    display:block;
+    color:#f0f0f0;
+    box-sizing:border-box;
+  }
+
+  .admin-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px 18px;
+    margin-bottom:12px;
+  }
+
+  .admin-panel input,
+  .admin-panel textarea{
+    width:100%;
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.25);
+    padding:8px;
+    font-size:18px;
+    background:rgba(0,0,0,0.35);
+    color:#f0f0f0;
+    box-sizing:border-box;
+    outline:none;
+  }
+
+  .admin-panel textarea{ min-height:180px; }
+
+  .admin-panel input:focus,
+  .admin-panel textarea:focus{
+    border-color:rgba(255,255,255,0.45);
+  }
+
+  .btn-save{
+    background:rgba(11,124,47,0.85);
+    color:#fff;
+    border-radius:6px;
+    border:1px solid rgba(11,124,47,0.9);
+    padding:6px 16px;
+    cursor:pointer;
+  }
+
+  .btn-reset{
+    background:rgba(139,0,0,0.85);
+    color:#fff;
+    border-radius:6px;
+    border:1px solid rgba(139,0,0,0.9);
+    padding:6px 16px;
+    cursor:pointer;
+    margin-right:8px;
+  }
+
+  .admin-actions{
+    margin-top:10px;
+    text-align:right;
+  }
+
+  /* адаптив */
+  @media (max-width:1100px){
+    .content-row{ flex-direction:column; }
+    .panel-wide,.right-column{ flex:1; width:100%; }
+    .chart-wrap-alma{ height:320px; }
+  }
+  @media (max-width:768px){
+    .chart-wrap-alma{ height:290px; }
+    .header-title h1{ font-size:36px; }
+    .header-title p{ font-size:18px; }
+    .title{ font-size:28px; }
+    #status-text{ font-size:22px; }
+  }
+  @media (max-width:480px){
+    .chart-wrap-alma{ height:260px; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer{
+    width:90vw;
+    max-width:var(--page-max-width);
+    margin:14px auto 0;
+    padding:12px 18px;
+    border-radius:12px;
+    text-align:center;
+    font-size:16px;
+    color:#e6e6e6;
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+  }
+  .footer small{
+    display:block;
+    line-height:1.5;
+    text-shadow:0 0 8px rgba(0,0,0,0.55);
+  }
+</style>
+</head>
+
+<body>
+<div class="page-wrapper">
+
+  <!-- ---------- ШАПКА ---------- -->
+ <div class="header">
+  <!-- 1-я строка: эмблемы -->
+  <div class="header-top">
+    <div class="logo-group left">
+      <img src="ii_logo_en.png" alt="Институт ионосферы">
+    </div>
+
+    <div class="header-spacer"></div>
+
+    <div class="logo-group right">
+      <img src="banner_lab.png" alt="Лаборатория космической погоды">
+    </div>
+  </div>
+
+  <!-- 2-я строка: текст под эмблемами -->
+  <div class="header-bottom">
+    <h1>Лаборатория диагностики и прогноза космической погоды</h1>
+    <p class="header-sub">Институт ионосферы</p>
+    <p class="header-sub">Алматы, Казахстан</p>
+  </div>
+</div>
+
+  <!-- ---------- ОСНОВНОЙ БЛОК ---------- -->
+  <div class="main-wrapper">
+    <div class="title">Прогноз геомагнитной активности на ближайшие 6 дней</div>
+
+    <div class="content-row">
+      <!-- ЛЕВАЯ ПАНЕЛЬ: ПРОГНОЗ Kp -->
+      <div class="panel panel-wide">
+        <small>Kp-index</small>
+
+        <canvas id="kpChart"></canvas>
+
+        <div class="export-buttons">
+          <button onclick="downloadPNG('kpChart','kp_forecast.png')">PNG</button>
+        </div>
+
+        <div class="last-update">
+          Последнее обновление: <span id="last-update">–</span>
+        </div>
+      </div>
+
+      <!-- ПРАВАЯ КОЛОНКА -->
+      <div class="right-column">
+
+        <!-- легенда -->
+        <div class="panel">
+          <h2>Состояние магнитного поля</h2>
+
+          <div class="legend-block">
+            <div class="legend-row">
+              <div class="legend-color kp-low"></div>
+              Спокойное / слабовозмущённое состояние (Kp = 0–3)
+            </div>
+            <div class="legend-row">
+              <div class="legend-color kp-yellow"></div>
+              Возмущенное состояние (Kp = 4)
+            </div>
+            <div class="legend-row">
+              <div class="legend-color kp-red1"></div>
+              Малая магнитная буря (Kp = 5)
+            </div>
+            <div class="legend-row">
+              <div class="legend-color kp-red2"></div>
+              Умеренная магнитная буря (Kp = 6)
+            </div>
+            <div class="legend-row">
+              <div class="legend-color kp-red3"></div>
+              Большая магнитная буря (Kp = 7)
+            </div>
+
+            <!-- ✅ длинная строка без переноса -->
+            <div class="legend-row legend-row-long">
+              <div class="legend-color kp-red4"></div>
+              Очень большая / экстремальная магнитная буря (Kp = 8–9)
+            </div>
+
+            <div class="kp-comment">
+              Kp-index — планетарный индекс геомагнитной активности
+            </div>
+          </div>
+        </div>
+
+        <!-- архив отдельным боксом -->
+        <div class="archive-box">
+          <h2>Архив прогнозов</h2>
+          <a class="archive-btn" href="archive.html">Перейти в архив</a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Состояние околоземного космического пространства -->
+    <div class="panel panel-bottom">
+      <h2>Состояние околоземного космического пространства</h2>
+      <p id="status-text">—</p>
+    </div>
+
+    <!-- НИЖНИЙ ГРАФИК: KAAA -->
+    <div class="panel panel-bottom">
+      <h2>Текущие 3-часовые K-индексы</h2>
+      <small>Геомагнитная обсерватория «Алма-Ата»</small>
+
+      <div class="chart-wrap chart-wrap-alma">
+        <canvas id="almaKChart"></canvas>
+      </div>
+
+      <div class="ut-description">
+        <p>
+          <strong>UT (Universal Time)</strong> – мировое время <br>
+          <span style="color:#dddddd">Время в Алматы UT+5 часов</span>
+        </p>
+      </div>
+
+      <div class="ut-description">
+        <p>
+          Геомагнитная обсерватория «Алма-Ата» расположена в предгорьях Северного Тянь-Шаня на высоте около 1300 м над уровнем моря, примерно в 10 км от города Алматы.
+          Географические координаты обсерватории: 43,10° с. ш. и 76,57° в. д., геомагнитные координаты: 34,3° с. ш. и 152,7° в. д.
+          На базе обсерватории осуществляется непрерывный мониторинг состояния геомагнитного поля.
+        </p>
+      </div>
+
+      <div class="export-buttons">
+        <button onclick="downloadPNG('almaKChart','almata_k3h.png')">PNG</button>
+      </div>
+
+      <div class="last-update">
+        Последнее обновление данных: <span id="alma-last-update"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- РЕЖИМ РЕДАКТИРОВАНИЯ ПРОГНОЗА -->
+  <div class="admin-panel" id="admin-panel">
+    <h3 style="margin-top:0;text-align:center;">Закрытая страница редактирования прогноза</h3>
+    <h3>Ежедневное заполнение прогноза</h3>
+
+    <div class="admin-grid">
+      <div><label>Дата 1</label><input id="date-0"></div>
+      <div><label>Kp 1</label><input id="kp-0" type="number" min="0" max="9"></div><div></div>
+
+      <div><label>Дата 2</label><input id="date-1"></div>
+      <div><label>Kp 2</label><input id="kp-1" type="number" min="0" max="9"></div><div></div>
+
+      <div><label>Дата 3</label><input id="date-2"></div>
+      <div><label>Kp 3</label><input id="kp-2" type="number" min="0" max="9"></div><div></div>
+
+      <div><label>Дата 4</label><input id="date-3"></div>
+      <div><label>Kp 4</label><input id="kp-3" type="number" min="0" max="9"></div><div></div>
+
+      <div><label>Дата 5</label><input id="date-4"></div>
+      <div><label>Kp 5</label><input id="kp-4" type="number" min="0" max="9"></div><div></div>
+
+      <div><label>Дата 6</label><input id="date-5"></div>
+      <div><label>Kp 6</label><input id="kp-5" type="number" min="0" max="9"></div><div></div>
+    </div>
+
+    <label>Последнее обновление</label>
+    <input id="form-last-update" readonly>
+
+    <label>Описание обстановки</label>
+    <textarea id="form-status-text"></textarea>
+
+    <div class="admin-actions">
+      <button class="btn-reset" id="btn-reset">Сброс</button>
+      <button class="btn-save" id="btn-save">Сохранить</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <small>© Институт ионосферы, Алматы 2026</small>
+    <small>Лаборатория диагностики и прогноза космической погоды</small>
+  </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const PAGE_PASSWORD = "SW2026";
+const enteredPassword = prompt("Введите пароль для доступа к странице редактирования");
+if(enteredPassword !== PAGE_PASSWORD){
+  document.body.innerHTML = "<div style='color:#fff;text-align:center;margin-top:60px;font:24px Arial,sans-serif;'>Доступ запрещён</div>";
+  throw new Error("Access denied");
+}
+
+/* ================= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ================= */
+
+function pad2(n){ return n < 10 ? "0"+n : ""+n; }
+
+function formatNowUtc(){
+  const d = new Date();
+  return pad2(d.getUTCDate()) + "." +
+         pad2(d.getUTCMonth()+1) + "." +
+         d.getFullYear() + " " +
+         pad2(d.getUTCHours()) + ":" +
+         pad2(d.getUTCMinutes()) + " UT";
+}
+
+/* 6 дат прогноза: сегодня + 0…5 дней, DD.MM.YYYY */
+function generateForecastDates(){
+  const today = new Date();
+  const dates = [];
+  for(let i=0;i<6;i++){
+    const d = new Date(today);
+    d.setDate(d.getDate()+i);
+    dates.push(pad2(d.getDate())+"."+pad2(d.getMonth()+1)+"."+d.getFullYear());
+  }
+  return dates;
+}
+
+/* формат даты для подписи: "24.11.25" */
+function formatDateDDMMYY(datePart){
+  const [yyyy,mm,dd] = datePart.split("-");
+  return dd + "." + mm + "." + yyyy.slice(-2);
+}
+
+function kpColor(kp){
+  if(kp <= 3) return "#00b050";
+  if(kp === 4) return "#ffd800";
+  if(kp === 5) return "#ff3b3b";
+  if(kp === 6) return "#e00000";
+  if(kp === 7) return "#b00000";
+  return "#800000";
+}
+
+function gfzKColor(kp){
+  if(kp <= 0) return "#0000ff";
+  if(kp <= 3) return "#00ff00";
+  if(kp === 4) return "#ffff00";
+  if(kp <= 6) return "#ff9900";
+  return "#ff0000";
+}
+
+/* ================= ПРОГНОЗНЫЙ ГРАФИК KP ================= */
+
+const defaultData = {
+  dates: generateForecastDates(),
+  kp: [1,2,4,6,7,8],
+  lastUpdate: "",
+  statusText: "Нет данных."
+};
+
+let kpChartInstance = null;
+
+/* значения Kp внутри столбцов (верхний график) */
+const valueLabelPlugin = {
+  id:"valueLabel",
+  afterDatasetsDraw(chart){
+    if(!chart.canvas || chart.canvas.id !== "kpChart") return;
+
+    const { ctx } = chart;
+    const dataset = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
+
+    ctx.save();
+    ctx.font = "bold 24px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    meta.data.forEach((bar, index) => {
+      const val = dataset.data[index];
+      if(val == null) return;
+
+      const props = bar.getProps(["x","y","base"], true);
+      const x = props.x;
+      const y = props.y;
+      const base = props.base;
+      const centerY = y + (base - y)/2;
+
+      ctx.fillText(val, x, centerY);
+    });
+
+    ctx.restore();
+  }
+};
+
+/* разделители суток + дата над графиком (alma) */
+const daySeparatorPlugin = {
+  id:"daySeparator",
+  afterDraw(chart){
+    if(!chart.canvas || chart.canvas.id !== "almaKChart") return;
+
+    const labels = chart.data.labels;
+    if(!labels || !labels.length) return;
+
+    const xScale = chart.scales.x;
+    const yScale = chart.scales.y;
+    const ctx = chart.ctx;
+
+    const dayGroups = [];
+    let currentDay = null;
+    let startIndex = 0;
+
+    labels.forEach((lab, i) => {
+      const day = lab.split(" ")[0];
+      if(day !== currentDay){
+        if(currentDay !== null){
+          dayGroups.push({ day: currentDay, start: startIndex, end: i-1 });
+        }
+        currentDay = day;
+        startIndex = i;
+
+        if(i > 0){
+          const xPrev = xScale.getPixelForValue(i - 1);
+          const xCurr = xScale.getPixelForValue(i);
+          const x = (xPrev + xCurr) / 2;
+
+          ctx.save();
+          ctx.strokeStyle = "rgba(255,255,255,0.55)";
+          ctx.lineWidth = 2;
+          ctx.setLineDash([5,4]);
+          ctx.beginPath();
+          ctx.moveTo(x, yScale.top);
+          ctx.lineTo(x, yScale.bottom);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    });
+
+    if(currentDay !== null){
+      dayGroups.push({ day: currentDay, start: startIndex, end: labels.length - 1 });
+    }
+
+    // даты над графиком
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 20px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+
+    dayGroups.forEach(group => {
+      const midIndex = (group.start + group.end)/2;
+      const xMid = xScale.getPixelForValue(midIndex);
+      const dateText = formatDateDDMMYY(group.day);
+      const yPos = yScale.top - 14;
+      ctx.fillText(dateText, xMid, yPos);
+    });
+
+    ctx.restore();
+  }
+};
+
+Chart.register(valueLabelPlugin, daySeparatorPlugin);
+
+function renderKpChart(data){
+  const ctx = document.getElementById("kpChart").getContext("2d");
+  if(kpChartInstance) kpChartInstance.destroy();
+
+  const colors = (data.kp || []).map(kpColor);
+
+  kpChartInstance = new Chart(ctx, {
+    type:"bar",
+    data:{
+      labels:data.dates || [],
+      datasets:[{
+        data:data.kp || [],
+        backgroundColor:colors,
+        borderColor:"rgba(0,0,0,0.7)",
+        borderWidth:1.4,
+        barThickness:"flex",
+        barPercentage:0.9,
+        categoryPercentage:0.98,
+        borderRadius:3
+      }]
+    },
+    options:{
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      layout:{ padding:{ top:24, right:24, left:12, bottom:14 } },
+      scales:{
+        y:{
+          beginAtZero:true,
+          max:9,
+          ticks:{ stepSize:1, color:"#ffffff", font:{ size:22 } },
+          grid:{ color:"rgba(255,255,255,0.25)" },
+          title:{ display:true, text:"Kp-index", color:"#ffffff", font:{ size:24 } }
+        },
+       x:{
+  grid:{ display:false, offset:true },
+  ticks:{
+    color:"#ffffff",
+    align:"center",
+    maxRotation:0,
+    minRotation:0,
+    font:{
+      family:"Arial",
+      size:22,
+      weight:"normal"   // ← убираем жирность
+    }
+  },
+  title:{
+    display:true,
+    text:"Дата",
+    color:"#ffffff",
+    font:{
+      family:"Arial",
+      size:20,
+      weight:"normal"   // ← делаем как у Kp-index
+    }
+  }
+}
+      }
+    }
+  });
+
+  document.getElementById("last-update").textContent = data.lastUpdate || formatNowUtc();
+  document.getElementById("status-text").textContent = data.statusText || "Нет данных.";
+}
+
+/* ---------- ФОРМА ---------- */
+function fillForm(data){
+  for(let i=0;i<6;i++){
+    document.getElementById("date-"+i).value = (data.dates && data.dates[i]) ? data.dates[i] : "";
+    document.getElementById("kp-"+i).value   = (data.kp && data.kp[i] != null) ? data.kp[i] : "";
+  }
+  document.getElementById("form-last-update").value = data.lastUpdate || "";
+  document.getElementById("form-status-text").value = data.statusText || "";
+}
+
+function readForm(){
+  const dates = [];
+  const kp = [];
+  for(let i=0;i<6;i++){
+    dates.push(document.getElementById("date-"+i).value || "");
+    const val = Number(document.getElementById("kp-"+i).value);
+    kp.push(Number.isNaN(val) ? 0 : val);
+  }
+  return {
+    dates,
+    kp,
+    lastUpdate: document.getElementById("form-last-update").value || "",
+    statusText: document.getElementById("form-status-text").value || ""
+  };
+}
+
+/* ✅ автозаполняем даты только если поле пустое */
+function autoFillDates(){
+  const dates = generateForecastDates();
+  for(let i=0;i<6;i++){
+    document.getElementById("date-"+i).value = dates[i];
+  }
+}
+
+/* ================= ЭКСПОРТ PNG ================= */
+function downloadPNG(canvasId, fileName){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return;
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = fileName || (canvasId + ".png");
+  link.click();
+}
+
+/* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА (KAAA) ================= */
+
+let almaChartInstance = null;
+
+function renderAlmaKChart(labels, values){
+  const ctx = document.getElementById("almaKChart").getContext("2d");
+  if(almaChartInstance) almaChartInstance.destroy();
+
+  almaChartInstance = new Chart(ctx, {
+    type:"bar",
+    data:{
+      labels,
+      datasets:[{
+        data: values,
+        backgroundColor: values.map(gfzKColor),
+        borderColor: function(context){
+          const index = context.dataIndex;
+          const labels = context.chart.data.labels;
+          const baseColor = "rgba(255,255,255,0.18)";
+          if(!labels || index === 0) return baseColor;
+          const day = labels[index].split(" ")[0];
+          const prevDay = labels[index-1].split(" ")[0];
+          return (day !== prevDay) ? "#ffffff" : baseColor;
+        },
+        borderWidth: 1,
+        barThickness:"flex",
+        barPercentage:0.9,
+        categoryPercentage:1.0,
+        borderRadius:0
+      }]
+    },
+    options:{
+      devicePixelRatio: window.devicePixelRatio || 1,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      layout:{ padding:{ top:52, right:24, left:12, bottom:16 } },
+      scales:{
+        y:{
+          beginAtZero:true,
+          max:9,
+          ticks:{
+            stepSize:1,
+            color:"#ffffff",
+            padding:8,
+            font:{ family:"Arial", size:20, weight:"bold" }
+          },
+          grid:{ color:"rgba(255,255,255,0.18)" },
+          title:{
+            display:true,
+            text:"K-index",
+            color:"#ffffff",
+            font:{ family:"Arial", size:24, weight:"bold" }
+          }
+        },
+        x:{
+          ticks:{
+            color:"#ffffff",
+            padding:8,
+            font:{ family:"Arial", size:20, weight:"bold" },
+            autoSkip:false,
+            maxRotation:0,
+            minRotation:0,
+            callback:function(value){
+              const raw = this.getLabelForValue(value);
+              if(!raw) return "";
+              const parts = raw.split(" ");
+              const timePartFull = parts[1] || "";
+              return timePartFull.slice(0,5);
+            }
+          },
+          grid:{ display:false },
+          title:{
+            display:true,
+            text:"Время (UT)",
+            color:"#ffffff",
+            font:{ family:"Arial", size:24, weight:"bold" }
+          }
+        }
+      }
+    }
+  });
+
+  if(labels.length){
+    const lastRaw = labels[labels.length - 1];
+    const [datePart, timePartFull] = lastRaw.split(" ");
+    const time = timePartFull ? timePartFull.slice(0,5) : "";
+    if(!document.getElementById("alma-last-update").textContent.trim()){
+      document.getElementById("alma-last-update").textContent = formatDateDDMMYY(datePart) + " " + time + " UT";
+    }
+  }else{
+    document.getElementById("alma-last-update").textContent = "нет данных";
+  }
+}
+
+/* ✅ KAAA из GitHub/Cloudflare (data/kaaa.txt) + время обновления (data/kaaa_last_update.txt) */
+async function loadAlmaDataFromTxt(){
+  try{
+    const [dataResp, updResp] = await Promise.all([
+      fetch("data/kaaa.txt?rnd=" + Math.random(), { cache:"no-store" }),
+      fetch("data/kaaa_last_update.txt?rnd=" + Math.random(), { cache:"no-store" })
+    ]);
+
+    if(!dataResp.ok) throw new Error("Не удалось загрузить data/kaaa.txt: " + dataResp.status);
+
+    const text = (await dataResp.text()).trim();
+    const lines = text.split(/\r?\n/);
+
+    const fullLabels = [];
+    const fullValues = [];
+
+    for(const raw of lines){
+      const line = raw.trim();
+      if(!line) continue;
+
+      const parts = line.split(",");
+      if(parts.length < 2) continue;
+
+      const dtStr = parts[0].trim();    // "YYYY-MM-DD HH:MM:SS"
+      const val = parseFloat(parts[1]); // K
+
+      if(isNaN(val) || val < 0) continue;
+
+      fullLabels.push(dtStr);
+      fullValues.push(val);
+    }
+
+    if(!fullValues.length){
+      throw new Error("data/kaaa.txt: нет корректных значений K-индекса");
+    }
+
+    const N = 12;
+    const start = Math.max(0, fullLabels.length - N);
+    const labels = fullLabels.slice(start);
+    const values = fullValues.slice(start);
+
+    document.getElementById("alma-last-update").textContent = "";
+    renderAlmaKChart(labels, values);
+
+    if(updResp.ok){
+      const updText = (await updResp.text()).trim();
+      if(updText){
+        document.getElementById("alma-last-update").textContent = updText;
+      }
+    }
+  }catch(e){
+    console.error("Ошибка Alma KAAA:", e);
+    document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
+  }
+}
+
+/* ================= CLOUDLFARE API (общий прогноз) ================= */
+
+const API_FORECAST = "/api/forecast";
+const API_ARCHIVE  = "/api/archive";  /* ✅ архив */
+const ADMIN_TOKEN_KEY = "sw_admin_token_session";
+
+function getAdminToken(){
+  return sessionStorage.getItem(ADMIN_TOKEN_KEY) || "";
+}
+
+function ensureAdminToken(){
+  let t = getAdminToken();
+  if(t) return t;
+
+  t = prompt("Введите ADMIN TOKEN:");
+  if(t) sessionStorage.setItem(ADMIN_TOKEN_KEY, t.trim());
+  return t;
+}
+
+async function fetchForecastFromServer(){
+  try{
+    const resp = await fetch(API_FORECAST, { cache: "no-store" });
+    const j = await resp.json();
+    return (j && j.ok) ? j.data : null;
+  }catch(e){
+    console.warn("Server fetch error:", e);
+    return null;
+  }
+}
+
+async function saveForecastToServer(data){
+  const token = ensureAdminToken();
+  if(!token) throw new Error("No token");
+
+  const resp = await fetch(API_FORECAST, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "X-Admin-Token": token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const j = await resp.json().catch(() => null);
+  if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Save failed");
+}
+
+/* ✅ сохранение в архив */
+async function saveArchiveToServer(data){
+  const token = ensureAdminToken();
+  if(!token) throw new Error("No token");
+
+  const resp = await fetch(API_ARCHIVE, {
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "X-Admin-Token": token
+    },
+    body: JSON.stringify(data)
+  });
+
+  const j = await resp.json().catch(() => null);
+  if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Archive save failed");
+}
+
+/* ================= UI handlers ================= */
+
+document.getElementById("btn-save").onclick = async () => {
+  try{
+    const data = readForm();
+    data.lastUpdate = formatNowUtc();
+    document.getElementById("form-last-update").value = data.lastUpdate;
+
+    await saveForecastToServer(data);
+    await saveArchiveToServer(data); /* ✅ добавили архивирование */
+
+    renderKpChart(data);
+    document.getElementById("admin-panel").style.display = "none";
+    alert("Сохранено для всех пользователей ✅");
+  }catch(e){
+    alert("Ошибка: " + e.message);
+  }
+};
+
+document.getElementById("btn-reset").onclick = () => {
+  const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
+  fillForm(data);
+  renderKpChart(data);
+};
+
+/* ================= INIT ================= */
+
+(async () => {
+  const serverData = await fetchForecastFromServer();
+  const initialData = serverData || { ...defaultData, lastUpdate: formatNowUtc() };
+
+  fillForm(initialData);
+  renderKpChart(initialData);
+
+  loadAlmaDataFromTxt();
+  setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
+})();
+
+/* ✅ fade-in включаем после полной загрузки */
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
+</script>
+
+</body>
+</html>
+
