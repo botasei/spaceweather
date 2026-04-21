@@ -1119,7 +1119,10 @@ async function loadAlmaDataFromTxt(){
 /* ================= CLOUDLFARE API (общий прогноз) ================= */
 
 const API_FORECAST = "/api/forecast";
-const API_ARCHIVE  = "/api/archive";  /* ✅ архив */
+/* ================= CLOUDLFARE API (общий прогноз) ================= */
+
+const API_FORECAST = "/api/forecast";
+const API_ARCHIVE  = "/api/archive";
 const ADMIN_TOKEN_KEY = "sw_admin_token_session";
 
 function getAdminToken(){
@@ -1151,9 +1154,9 @@ async function saveForecastToServer(data){
   if(!token) throw new Error("No token");
 
   const resp = await fetch(API_FORECAST, {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
       "X-Admin-Token": token
     },
     body: JSON.stringify(data)
@@ -1163,15 +1166,14 @@ async function saveForecastToServer(data){
   if(!j || !j.ok) throw new Error((j && j.error) ? j.error : "Save failed");
 }
 
-/* ✅ сохранение в архив */
 async function saveArchiveToServer(data){
   const token = ensureAdminToken();
   if(!token) throw new Error("No token");
 
   const resp = await fetch(API_ARCHIVE, {
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
       "X-Admin-Token": token
     },
     body: JSON.stringify(data)
@@ -1190,16 +1192,6 @@ document.getElementById("btn-save").onclick = async () => {
     document.getElementById("form-last-update").value = data.lastUpdate;
 
     await saveForecastToServer(data);
-    await saveArchiveToServer(data); /* ✅ добавили архивирование */
-
-    renderKpChart(data);
-  document.getElementById("btn-save").onclick = async () => {
-  try{
-    const data = readForm();
-    data.lastUpdate = formatNowUtc();
-    document.getElementById("form-last-update").value = data.lastUpdate;
-
-    await saveForecastToServer(data);
     await saveArchiveToServer(data);
 
     renderKpChart(data);
@@ -1209,14 +1201,13 @@ document.getElementById("btn-save").onclick = async () => {
     alert("Ошибка: " + e.message);
   }
 };
-    alert("Сохранено для всех пользователей ✅");
-  }catch(e){
-    alert("Ошибка: " + e.message);
-  }
-};
 
 document.getElementById("btn-reset").onclick = () => {
-  const data = { ...defaultData, dates: generateForecastDates(), lastUpdate: formatNowUtc() };
+  const data = {
+    ...defaultData,
+    dates: generateForecastDates(),
+    lastUpdate: formatNowUtc()
+  };
   fillForm(data);
   renderKpChart(data);
 };
@@ -1225,7 +1216,10 @@ document.getElementById("btn-reset").onclick = () => {
 
 (async () => {
   const serverData = await fetchForecastFromServer();
-  const initialData = serverData || { ...defaultData, lastUpdate: formatNowUtc() };
+  const initialData = serverData || {
+    ...defaultData,
+    lastUpdate: formatNowUtc()
+  };
 
   fillForm(initialData);
   renderKpChart(initialData);
@@ -1234,7 +1228,8 @@ document.getElementById("btn-reset").onclick = () => {
   setInterval(loadAlmaDataFromTxt, 5 * 60 * 1000);
 })();
 
-/* ✅ fade-in включаем после полной загрузки */
+/* ================= FADE-IN ================= */
+
 window.addEventListener("load", () => {
   document.body.classList.add("loaded");
 });
