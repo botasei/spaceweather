@@ -809,14 +809,57 @@ function downloadPNG(canvasId, fileName){
 
 /* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
 
+<script>
 let almaChartInstance = null;
 
-function renderAlmaKChart(labels, values){
+function renderAlmaKChart(points){
   const canvas = document.getElementById("almaKChart");
   if(!canvas) return;
 
   const ctx = canvas.getContext("2d");
   if(almaChartInstance) almaChartInstance.destroy();
+
+  const labels = points.map(p => p.timeLabel);
+  const values = points.map(p => p.value);
+
+  const dayLabelPlugin = {
+    id: "dayLabelPlugin",
+    afterDraw(chart){
+      const { ctx, scales } = chart;
+      const xScale = scales.x;
+      const yScale = scales.y;
+      if(!xScale || !yScale) return;
+
+      const groups = [];
+      let start = 0;
+
+      for(let i = 1; i <= points.length; i++){
+        if(i === points.length || points[i].dateLabel !== points[start].dateLabel){
+          groups.push({
+            dateLabel: points[start].dateLabel,
+            start,
+            end: i - 1
+          });
+          start = i;
+        }
+      }
+
+      ctx.save();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 20px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+
+      groups.forEach(group => {
+        const x1 = xScale.getPixelForValue(group.start);
+        const x2 = xScale.getPixelForValue(group.end);
+        const xMid = (x1 + x2) / 2;
+        ctx.fillText(group.dateLabel, xMid, yScale.top - 14);
+      });
+
+      ctx.restore();
+    }
+  };
 
   almaChartInstance = new Chart(ctx, {
     type: "bar",
@@ -825,31 +868,25 @@ function renderAlmaKChart(labels, values){
       datasets: [{
         data: values,
         backgroundColor: values.map(gfzKColor),
-        borderColor: function(context){
-          const index = context.dataIndex;
-          const chartLabels = context.chart.data.labels;
-          const baseColor = "rgba(255,255,255,0.18)";
-          if(!chartLabels || index === 0) return baseColor;
-
-          const day = chartLabels[index].split(" ")[0];
-          const prevDay = chartLabels[index - 1].split(" ")[0];
-          return (day !== prevDay) ? "#ffffff" : baseColor;
-        },
+        borderColor: "rgba(255,255,255,0.18)",
         borderWidth: 1,
-        barThickness: "flex",
         barPercentage: 0.9,
-        categoryPercentage: 1.0,
+        categoryPercentage: 0.95,
         borderRadius: 0
       }]
     },
+    plugins: [dayLabelPlugin],
     options: {
-      devicePixelRatio: window.devicePixelRatio || 1,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      layout: { padding: { top: 52, right: 24, left: 12, bottom: 16 } },
+      layout: {
+        padding: { top: 52, right: 24, left: 12, bottom: 16 }
+      },
+      plugins: {
+        legend: { display: false }
+      },
       scales: {
         y: {
-          beginAtZero: true,
+          min: 0,
           max: 9,
           ticks: {
             stepSize: 1,
@@ -869,17 +906,10 @@ function renderAlmaKChart(labels, values){
           ticks: {
             color: "#ffffff",
             padding: 8,
-            font: { family: "Arial", size: 20, weight: "bold" },
             autoSkip: false,
             maxRotation: 0,
             minRotation: 0,
-            callback: function(value){
-              const raw = this.getLabelForValue(value);
-              if(!raw) return "";
-              const parts = raw.split(" ");
-              const timePartFull = parts[1] || "";
-              return timePartFull.slice(0, 5);
-            }
+            font: { family: "Arial", size: 20, weight: "bold" }
           },
           grid: { display: false },
           title: {
@@ -893,15 +923,10 @@ function renderAlmaKChart(labels, values){
     }
   });
 
-  if(labels.length){
-    const lastRaw = labels[labels.length - 1];
-    const [datePart, timePartFull] = lastRaw.split(" ");
-    const time = timePartFull ? timePartFull.slice(0, 5) : "";
-
-    if(!document.getElementById("alma-last-update").textContent.trim()){
-      document.getElementById("alma-last-update").textContent =
-        formatDateDDMMYY(datePart) + " " + time + " UT";
-    }
+  if(points.length){
+    const last = points[points.length - 1];
+    document.getElementById("alma-last-update").textContent =
+      `${last.fullDate} ${last.timeLabel} UT`;
   }else{
     document.getElementById("alma-last-update").textContent = "нет данных";
   }
@@ -921,8 +946,7 @@ async function loadAlmaDataFromTxt(){
     const text = (await dataResp.text()).trim();
     const lines = text.split(/\r?\n/);
 
-    const fullLabels = [];
-    const fullValues = [];
+    const parsed = [];
 
     for(const raw of lines){
       const line = raw.trim();
@@ -931,26 +955,33 @@ async function loadAlmaDataFromTxt(){
       const parts = line.split(",");
       if(parts.length < 2) continue;
 
-      const dtStr = parts[0].trim();
+      const dtStr = parts[0].trim();   // YYYY-MM-DD HH:MM:SS
       const val = parseFloat(parts[1]);
 
-      if(Number.isNaN(val) || val < 0) continue;
+      if(Number.isNaN(val)) continue;
 
-      fullLabels.push(dtStr);
-      fullValues.push(val);
+      const [datePart, timePart = "00:00:00"] = dtStr.split(" ");
+      const timeLabel = timePart.slice(0,5); // HH:MM
+      const dateLabel = formatDateDDMMYY(datePart);
+
+      parsed.push({
+        raw: dtStr,
+        value: val,
+        datePart,
+        dateLabel,
+        timeLabel,
+        fullDate: dateLabel
+      });
     }
 
-    if(!fullValues.length){
-      throw new Error("data/kaaa.txt: нет корректных значений K-индекса");
+    if(!parsed.length){
+      throw new Error("data/kaaa.txt: нет корректных значений");
     }
 
-    const N = 12;
-    const start = Math.max(0, fullLabels.length - N);
-    const labels = fullLabels.slice(start);
-    const values = fullValues.slice(start);
+    // Берем последние 8 трехчасовых значений, чтобы график был компактным и читаемым
+    const points = parsed.slice(-8);
 
-    document.getElementById("alma-last-update").textContent = "";
-    renderAlmaKChart(labels, values);
+    renderAlmaKChart(points);
 
     if(updResp.ok){
       const updText = (await updResp.text()).trim();
@@ -963,6 +994,7 @@ async function loadAlmaDataFromTxt(){
     document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
   }
 }
+</script>
 
 /* ================= API ПРОГНОЗА ================= */
 
