@@ -827,7 +827,7 @@ function renderAlmaKChart(points){
       const { ctx, scales } = chart;
       const xScale = scales.x;
       const yScale = scales.y;
-      if(!xScale || !yScale) return;
+      if(!xScale || !yScale || !points.length) return;
 
       const groups = [];
       let start = 0;
@@ -926,7 +926,7 @@ function renderAlmaKChart(points){
     const last = points[points.length - 1];
     document.getElementById("alma-last-update").textContent =
       `${last.fullDate} ${last.timeLabel} UT`;
-  }else{
+  } else {
     document.getElementById("alma-last-update").textContent = "нет данных";
   }
 }
@@ -956,7 +956,6 @@ async function loadAlmaDataFromTxt(){
 
       const dtStr = parts[0].trim();
       const val = parseFloat(parts[1]);
-
       if(Number.isNaN(val)) continue;
 
       const [datePart, timePart = "00:00:00"] = dtStr.split(" ");
@@ -969,7 +968,7 @@ async function loadAlmaDataFromTxt(){
         datePart,
         dateLabel,
         timeLabel,
-        fullDate: formatDateDDMMYY(datePart)
+        fullDate: dateLabel
       });
     }
 
@@ -978,7 +977,6 @@ async function loadAlmaDataFromTxt(){
     }
 
     const points = parsed.slice(-12);
-
     renderAlmaKChart(points);
 
     if(updResp.ok){
@@ -987,19 +985,7 @@ async function loadAlmaDataFromTxt(){
         document.getElementById("alma-last-update").textContent = updText;
       }
     }
-  }catch(e){
-    console.error("Ошибка Alma KAAA:", e);
-    document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
-  }
-}
-
-    if(updResp.ok){
-      const updText = (await updResp.text()).trim();
-      if(updText){
-        document.getElementById("alma-last-update").textContent = updText;
-      }
-    }
-  }catch(e){
+  } catch(e){
     console.error("Ошибка Alma KAAA:", e);
     document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
   }
