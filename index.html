@@ -809,6 +809,8 @@ function downloadPNG(canvasId, fileName){
 
 /* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
 
+/* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
+
 let almaChartInstance = null;
 
 function renderAlmaKChart(points){
@@ -954,13 +956,13 @@ async function loadAlmaDataFromTxt(){
       const parts = line.split(",");
       if(parts.length < 2) continue;
 
-      const dtStr = parts[0].trim();   // YYYY-MM-DD HH:MM:SS
+      const dtStr = parts[0].trim();
       const val = parseFloat(parts[1]);
 
       if(Number.isNaN(val)) continue;
 
       const [datePart, timePart = "00:00:00"] = dtStr.split(" ");
-      const timeLabel = timePart.slice(0,5); // HH:MM
+      const timeLabel = timePart.slice(0, 5);
       const dateLabel = formatDateDDMMYY(datePart);
 
       parsed.push({
@@ -977,8 +979,7 @@ async function loadAlmaDataFromTxt(){
       throw new Error("data/kaaa.txt: нет корректных значений");
     }
 
-    // Берем последние 8 трехчасовых значений, чтобы график был компактным и читаемым
-    const points = parsed.slice(-8);
+    const points = parsed.slice(-12);
 
     renderAlmaKChart(points);
 
