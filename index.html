@@ -809,8 +809,6 @@ function downloadPNG(canvasId, fileName){
 
 /* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
 
-/* ================= 3-ЧАСОВЫЕ K-ИНДЕКСЫ АЛМА-АТА ================= */
-
 let almaChartInstance = null;
 
 function renderAlmaKChart(points){
@@ -971,7 +969,7 @@ async function loadAlmaDataFromTxt(){
         datePart,
         dateLabel,
         timeLabel,
-        fullDate: dateLabel
+        fullDate: formatDateDDMMYY(datePart)
       });
     }
 
@@ -982,6 +980,18 @@ async function loadAlmaDataFromTxt(){
     const points = parsed.slice(-12);
 
     renderAlmaKChart(points);
+
+    if(updResp.ok){
+      const updText = (await updResp.text()).trim();
+      if(updText){
+        document.getElementById("alma-last-update").textContent = updText;
+      }
+    }
+  }catch(e){
+    console.error("Ошибка Alma KAAA:", e);
+    document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
+  }
+}
 
     if(updResp.ok){
       const updText = (await updResp.text()).trim();
