@@ -1016,8 +1016,10 @@ async function saveArchiveToServer(data){
 /* ================= INIT ================= */
 
 (async () => {
-  const serverData = await fetchForecastFromServer();
-  const initialData = serverData || { ...defaultData, lastUpdate: formatNowUtc() };
+const serverData = await fetchForecastFromServer();
+const cleanData = serverData?.data || null;
+
+const initialData = cleanData || { ...defaultData, lastUpdate: formatNowUtc() };
 
   fillForm(initialData);
   renderKpChart(initialData);
