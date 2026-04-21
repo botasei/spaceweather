@@ -811,141 +811,111 @@ function downloadPNG(canvasId, fileName){
 
 let almaChartInstance = null;
 
-function renderAlmaKChart(points){
-  const canvas = document.getElementById("almaKChart");
-  if(!canvas) return;
-
-  const ctx = canvas.getContext("2d");
+function renderAlmaKChart(labels, values){
+  const ctx = document.getElementById("almaKChart").getContext("2d");
   if(almaChartInstance) almaChartInstance.destroy();
 
-  const labels = points.map(p => p.timeLabel);
-  const values = points.map(p => p.value);
-
-  const dayLabelPlugin = {
-    id: "dayLabelPlugin",
-    afterDraw(chart){
-      const { ctx, scales } = chart;
-      const xScale = scales.x;
-      const yScale = scales.y;
-      if(!xScale || !yScale || !points.length) return;
-
-      const groups = [];
-      let start = 0;
-
-      for(let i = 1; i <= points.length; i++){
-        if(i === points.length || points[i].dateLabel !== points[start].dateLabel){
-          groups.push({
-            dateLabel: points[start].dateLabel,
-            start,
-            end: i - 1
-          });
-          start = i;
-        }
-      }
-
-      ctx.save();
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 20px Arial";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "bottom";
-
-      groups.forEach(group => {
-        const x1 = xScale.getPixelForValue(group.start);
-        const x2 = xScale.getPixelForValue(group.end);
-        const xMid = (x1 + x2) / 2;
-        ctx.fillText(group.dateLabel, xMid, yScale.top - 14);
-      });
-
-      ctx.restore();
-    }
-  };
-
   almaChartInstance = new Chart(ctx, {
-    type: "bar",
-    data: {
+    type:"bar",
+    data:{
       labels,
-      datasets: [{
+      datasets:[{
         data: values,
         backgroundColor: values.map(gfzKColor),
-        borderColor: "rgba(255,255,255,0.18)",
+        borderColor: function(context){
+          const index = context.dataIndex;
+          const labels = context.chart.data.labels;
+          const baseColor = "rgba(255,255,255,0.18)";
+          if(!labels || index === 0) return baseColor;
+          const day = labels[index].split(" ")[0];
+          const prevDay = labels[index-1].split(" ")[0];
+          return (day !== prevDay) ? "#ffffff" : baseColor;
+        },
         borderWidth: 1,
-        barPercentage: 0.9,
-        categoryPercentage: 0.95,
-        borderRadius: 0
+        barThickness:"flex",
+        barPercentage:0.9,
+        categoryPercentage:1.0,
+        borderRadius:0
       }]
     },
-    plugins: [dayLabelPlugin],
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: { top: 52, right: 24, left: 12, bottom: 16 }
-      },
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          min: 0,
-          max: 9,
-          ticks: {
-            stepSize: 1,
-            color: "#ffffff",
-            padding: 8,
-            font: { family: "Arial", size: 20, weight: "bold" }
+    options:{
+      devicePixelRatio: window.devicePixelRatio || 1,
+      maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      layout:{ padding:{ top:52, right:24, left:12, bottom:16 } },
+      scales:{
+        y:{
+          beginAtZero:true,
+          max:9,
+          ticks:{
+            stepSize:1,
+            color:"#ffffff",
+            padding:8,
+            font:{ family:"Arial", size:20, weight:"bold" }
           },
-          grid: { color: "rgba(255,255,255,0.18)" },
-          title: {
-            display: true,
-            text: "K-index",
-            color: "#ffffff",
-            font: { family: "Arial", size: 24, weight: "bold" }
+          grid:{ color:"rgba(255,255,255,0.18)" },
+          title:{
+            display:true,
+            text:"K-index",
+            color:"#ffffff",
+            font:{ family:"Arial", size:24, weight:"bold" }
           }
         },
-        x: {
-          ticks: {
-            color: "#ffffff",
-            padding: 8,
-            autoSkip: false,
-            maxRotation: 0,
-            minRotation: 0,
-            font: { family: "Arial", size: 20, weight: "bold" }
+        x:{
+          ticks:{
+            color:"#ffffff",
+            padding:8,
+            font:{ family:"Arial", size:20, weight:"bold" },
+            autoSkip:false,
+            maxRotation:0,
+            minRotation:0,
+            callback:function(value){
+              const raw = this.getLabelForValue(value);
+              if(!raw) return "";
+              const parts = raw.split(" ");
+              const timePartFull = parts[1] || "";
+              return timePartFull.slice(0,5);
+            }
           },
-          grid: { display: false },
-          title: {
-            display: true,
-            text: "Время (UT)",
-            color: "#ffffff",
-            font: { family: "Arial", size: 24, weight: "bold" }
+          grid:{ display:false },
+          title:{
+            display:true,
+            text:"Время (UT)",
+            color:"#ffffff",
+            font:{ family:"Arial", size:24, weight:"bold" }
           }
         }
       }
     }
   });
 
-  if(points.length){
-    const last = points[points.length - 1];
-    document.getElementById("alma-last-update").textContent =
-      `${last.fullDate} ${last.timeLabel} UT`;
-  } else {
+  if(labels.length){
+    const lastRaw = labels[labels.length - 1];
+    const [datePart, timePartFull] = lastRaw.split(" ");
+    const time = timePartFull ? timePartFull.slice(0,5) : "";
+    if(!document.getElementById("alma-last-update").textContent.trim()){
+      document.getElementById("alma-last-update").textContent = formatDateDDMMYY(datePart) + " " + time + " UT";
+    }
+  }else{
     document.getElementById("alma-last-update").textContent = "нет данных";
   }
 }
 
+/* ✅ KAAA из GitHub/Cloudflare (data/kaaa.txt) + время обновления (data/kaaa_last_update.txt) */
 async function loadAlmaDataFromTxt(){
   try{
     const [dataResp, updResp] = await Promise.all([
-      fetch("data/kaaa.txt?rnd=" + Math.random(), { cache: "no-store" }),
-      fetch("data/kaaa_last_update.txt?rnd=" + Math.random(), { cache: "no-store" })
+      fetch("data/kaaa.txt?rnd=" + Math.random(), { cache:"no-store" }),
+      fetch("data/kaaa_last_update.txt?rnd=" + Math.random(), { cache:"no-store" })
     ]);
 
-    if(!dataResp.ok){
-      throw new Error("Не удалось загрузить data/kaaa.txt: " + dataResp.status);
-    }
+    if(!dataResp.ok) throw new Error("Не удалось загрузить data/kaaa.txt: " + dataResp.status);
 
     const text = (await dataResp.text()).trim();
     const lines = text.split(/\r?\n/);
 
-    const parsed = [];
+    const fullLabels = [];
+    const fullValues = [];
 
     for(const raw of lines){
       const line = raw.trim();
@@ -954,30 +924,26 @@ async function loadAlmaDataFromTxt(){
       const parts = line.split(",");
       if(parts.length < 2) continue;
 
-      const dtStr = parts[0].trim();
-      const val = parseFloat(parts[1]);
-      if(Number.isNaN(val)) continue;
+      const dtStr = parts[0].trim();    // "YYYY-MM-DD HH:MM:SS"
+      const val = parseFloat(parts[1]); // K
 
-      const [datePart, timePart = "00:00:00"] = dtStr.split(" ");
-      const timeLabel = timePart.slice(0, 5);
-      const dateLabel = formatDateDDMMYY(datePart);
+      if(isNaN(val) || val < 0) continue;
 
-      parsed.push({
-        raw: dtStr,
-        value: val,
-        datePart,
-        dateLabel,
-        timeLabel,
-        fullDate: dateLabel
-      });
+      fullLabels.push(dtStr);
+      fullValues.push(val);
     }
 
-    if(!parsed.length){
-      throw new Error("data/kaaa.txt: нет корректных значений");
+    if(!fullValues.length){
+      throw new Error("data/kaaa.txt: нет корректных значений K-индекса");
     }
 
-    const points = parsed.slice(-12);
-    renderAlmaKChart(points);
+    const N = 12;
+    const start = Math.max(0, fullLabels.length - N);
+    const labels = fullLabels.slice(start);
+    const values = fullValues.slice(start);
+
+    document.getElementById("alma-last-update").textContent = "";
+    renderAlmaKChart(labels, values);
 
     if(updResp.ok){
       const updText = (await updResp.text()).trim();
@@ -985,11 +951,12 @@ async function loadAlmaDataFromTxt(){
         document.getElementById("alma-last-update").textContent = updText;
       }
     }
-  } catch(e){
+  }catch(e){
     console.error("Ошибка Alma KAAA:", e);
     document.getElementById("alma-last-update").textContent = "Ошибка загрузки данных";
   }
 }
+
 /* ================= API ПРОГНОЗА ================= */
 
 const API_FORECAST = "/api/forecast";
