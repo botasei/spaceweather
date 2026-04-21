@@ -643,10 +643,12 @@
 
 <script>
 const PAGE_PASSWORD = "SW2026";
-const enteredPassword = prompt("Введите пароль для доступа к странице редактирования");
-if(enteredPassword !== PAGE_PASSWORD){
-  document.body.innerHTML = "<div style='color:#fff;text-align:center;margin-top:60px;font:24px Arial,sans-serif;'>Доступ запрещён</div>";
-  throw new Error("Access denied");
+
+let enteredPassword = prompt("Введите пароль для доступа к странице редактирования");
+
+if(!enteredPassword || enteredPassword.trim() !== PAGE_PASSWORD){
+  alert("Неверный пароль");
+  location.reload();
 }
 
 /* ================= ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ================= */
