@@ -32,12 +32,7 @@ export async function onRequest({ request, env }) {
 
   if (request.method === "POST") {
 
-    const token = request.headers.get("X-Admin-Token") || "";
-    if (token !== env.ADMIN_TOKEN) {
-      return jsonResponse({ ok: false, error: "Unauthorized" }, 401);
-    }
-
-    const data = await request.json();
+        const data = await request.json();
 
     if (!data.dates || !data.kp || data.dates.length !== 6) {
       return jsonResponse({ ok: false, error: "Invalid data" }, 400);
