@@ -1,97 +1,61 @@
-<!--: spam
-Content-Type: text/html
-
-<body bgcolor="#f0f0f8"><font color="#f0f0f8" size="-5"> -->
-<body bgcolor="#f0f0f8"><font color="#f0f0f8" size="-5"> --> -->
-</font> </font> </font> </script> </object> </blockquote> </pre>
-</table> </table> </table> </table> </table> </font> </font> </font>
-<body bgcolor="#f0f0f8">
-<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
-<tr bgcolor="#6622aa">
-<td valign=bottom>&nbsp;<br>
-<font color="#ffffff" face="helvetica, arial">&nbsp;<br>
-<big><big><strong>OperationalError</strong></big></big></font></td>
-<td align=right valign=bottom>
-<font color="#ffffff" face="helvetica, arial">Python 3.12.3: /usr/bin/python<br>Wed May  6 16:22:18 2026</font></td>
-</tr></table>
-<p>A problem occurred in a Python script.  Here is the sequence of
-function calls leading up to the error, in the order they occurred.</p>
-<table width="100%" cellspacing=0 cellpadding=0 border=0>
-<tr><td bgcolor="#d8bbff"><big>&nbsp;</big><a href="file:///home/swdb/www/cgi/swdb.py">/home/swdb/www/cgi/swdb.py</a> in <strong>&lt;module&gt;</strong></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;182</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;K-indexes&nbsp;data<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;183</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;datatypefield&nbsp;in&nbsp;['kaaa']:#&nbsp;k+iaga&nbsp;code<br>
-</tt></font></td></tr>
-<tr><td bgcolor="#ffccee"><tt>=&gt;<small>&nbsp;&nbsp;184</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getfromdb('Geomagnetic',&nbsp;'Kindexes',&nbsp;datatypefield,&nbsp;date1,&nbsp;date2)<br>
-</tt></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;185</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;datatype&nbsp;==&nbsp;'indx':<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;186</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;Magnetic&nbsp;global&nbsp;indexes<br>
-</tt></font></td></tr>
-<tr><td><small><font color="#909090"><strong>getfromdb</strong>&nbsp;= &lt;function getfromdb&gt;, <strong>datatypefield</strong>&nbsp;= 'kaaa', <strong>date1</strong>&nbsp;= datetime.date(2026, 4, 29), <strong>date2</strong>&nbsp;= datetime.date(2026, 5, 7)</font></small></td></tr></table>
-<table width="100%" cellspacing=0 cellpadding=0 border=0>
-<tr><td bgcolor="#d8bbff"><big>&nbsp;</big><a href="file:///home/swdb/www/cgi/swdb.py">/home/swdb/www/cgi/swdb.py</a> in <strong>getfromdb</strong>(db='Geomagnetic', table='Kindexes', datatypefield='kaaa', date1=datetime.date(2026, 4, 29), date2=datetime.date(2026, 5, 7))</td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;52</small>&nbsp;########################################################################<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;53</small>&nbsp;def&nbsp;getfromdb(db,&nbsp;table,&nbsp;datatypefield,&nbsp;date1,&nbsp;date2):<br>
-</tt></font></td></tr>
-<tr><td bgcolor="#ffccee"><tt>=&gt;<small>&nbsp;&nbsp;&nbsp;54</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;con&nbsp;=&nbsp;MySQLdb.connect(host=db_host,user=db_user,passwd=db_pwd)<br>
-</tt></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;55</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor&nbsp;=&nbsp;con.cursor()<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;56</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor.execute('USE&nbsp;'+db+';')<br>
-</tt></font></td></tr>
-<tr><td><small><font color="#909090">con <em>undefined</em>, <em>global</em> <strong>MySQLdb</strong>&nbsp;= &lt;module 'MySQLdb' from '/usr/lib/python3/dist-packages/MySQLdb/__init__.py'&gt;, MySQLdb.<strong>connect</strong>&nbsp;= &lt;function Connect&gt;, host <em>undefined</em>, <em>global</em> <strong>db_host</strong>&nbsp;= 'localhost', user <em>undefined</em>, <em>global</em> <strong>db_user</strong>&nbsp;= 'zumdbuser', passwd <em>undefined</em>, <em>global</em> <strong>db_pwd</strong>&nbsp;= 'bmnkvsk'</font></small></td></tr></table>
-<table width="100%" cellspacing=0 cellpadding=0 border=0>
-<tr><td bgcolor="#d8bbff"><big>&nbsp;</big><a href="file:///usr/lib/python3/dist-packages/MySQLdb/__init__.py">/usr/lib/python3/dist-packages/MySQLdb/__init__.py</a> in <strong>Connect</strong>(*args=(), **kwargs={'host': 'localhost', 'passwd': 'bmnkvsk', 'user': 'zumdbuser'})</td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;82</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"""Factory&nbsp;function&nbsp;for&nbsp;connections.Connection."""<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;83</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from&nbsp;MySQLdb.connections&nbsp;import&nbsp;Connection<br>
-</tt></font></td></tr>
-<tr><td bgcolor="#ffccee"><tt>=&gt;<small>&nbsp;&nbsp;&nbsp;84</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Connection(*args,&nbsp;**kwargs)<br>
-</tt></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;85</small>&nbsp;<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;&nbsp;86</small>&nbsp;connect&nbsp;=&nbsp;Connection&nbsp;=&nbsp;Connect<br>
-</tt></font></td></tr>
-<tr><td><small><font color="#909090"><strong>Connection</strong>&nbsp;= &lt;class 'MySQLdb.connections.Connection'&gt;, <strong>args</strong>&nbsp;= (), <strong>kwargs</strong>&nbsp;= {'host': 'localhost', 'passwd': 'bmnkvsk', 'user': 'zumdbuser'}</font></small></td></tr></table>
-<table width="100%" cellspacing=0 cellpadding=0 border=0>
-<tr><td bgcolor="#d8bbff"><big>&nbsp;</big><a href="file:///usr/lib/python3/dist-packages/MySQLdb/connections.py">/usr/lib/python3/dist-packages/MySQLdb/connections.py</a> in <strong>__init__</strong>(self=&lt;_mysql.connection open to '(null)'&gt;, *args=(), **kwargs={'host': 'localhost', 'passwd': 'bmnkvsk', 'user': 'zumdbuser'})</td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;177</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;autocommit&nbsp;=&nbsp;kwargs2.pop('autocommit',&nbsp;False)<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;178</small>&nbsp;<br>
-</tt></font></td></tr>
-<tr><td bgcolor="#ffccee"><tt>=&gt;<small>&nbsp;&nbsp;179</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(Connection,&nbsp;self).__init__(*args,&nbsp;**kwargs2)<br>
-</tt></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;180</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.cursorclass&nbsp;=&nbsp;cursorclass<br>
-</tt></font></td></tr>
-<tr><td><font color="#909090"><tt>&nbsp;&nbsp;<small>&nbsp;&nbsp;181</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.encoders&nbsp;=&nbsp;dict([&nbsp;(k,&nbsp;v)&nbsp;for&nbsp;k,&nbsp;v&nbsp;in&nbsp;conv.items()<br>
-</tt></font></td></tr>
-<tr><td><small><font color="#909090"><em>builtin</em> <strong>super</strong>&nbsp;= &lt;class 'super'&gt;, <em>global</em> <strong>Connection</strong>&nbsp;= &lt;class 'MySQLdb.connections.Connection'&gt;, <strong>self</strong>&nbsp;= &lt;_mysql.connection open to '(null)'&gt;, ).<strong>__init__</strong>&nbsp;= &lt;bound method Connection.__init__ of &lt;_mysql.connection open to '(null)'&gt;&gt;, <strong>args</strong>&nbsp;= (), <strong>kwargs2</strong>&nbsp;= {'client_flag': 196608, 'conv': {&lt;class 'int'&gt;: &lt;function Thing2Str&gt;, &lt;class 'float'&gt;: &lt;function Float2Str&gt;, &lt;class 'NoneType'&gt;: &lt;function None2NULL&gt;, &lt;class 'array.array'&gt;: &lt;function array2Str&gt;, &lt;class 'bool'&gt;: &lt;function Bool2Str&gt;, &lt;class 'datetime.date'&gt;: &lt;function Thing2Literal&gt;, &lt;class 'datetime.datetime'&gt;: &lt;function DateTime2literal&gt;, &lt;class 'datetime.timedelta'&gt;: &lt;function DateTimeDelta2literal&gt;, &lt;class 'set'&gt;: &lt;function Set2Str&gt;, &lt;class 'decimal.Decimal'&gt;: &lt;function Decimal2Literal&gt;, ...}, 'host': 'localhost', 'passwd': 'bmnkvsk', 'user': 'zumdbuser'}</font></small></td></tr></table><p><strong>OperationalError</strong>: (2002, "Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)")
-<br><tt><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small>&nbsp;</tt>add_note&nbsp;=
-&lt;built-in method add_note of OperationalError object&gt;
-<br><tt><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small>&nbsp;</tt>args&nbsp;=
-(2002, "Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)")
-<br><tt><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</small>&nbsp;</tt>with_traceback&nbsp;=
-&lt;built-in method with_traceback of OperationalError object&gt;
-
-
-<!-- The above is a description of an error in a Python program, formatted
-     for a web browser because the 'cgitb' module was enabled.  In case you
-     are not reading this in a web browser, here is the original traceback:
-
-Traceback (most recent call last):
-  File "/home/swdb/www/cgi/swdb.py", line 184, in &lt;module&gt;
-    getfromdb('Geomagnetic', 'Kindexes', datatypefield, date1, date2)
-  File "/home/swdb/www/cgi/swdb.py", line 54, in getfromdb
-    con = MySQLdb.connect(host=db_host,user=db_user,passwd=db_pwd)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3/dist-packages/MySQLdb/__init__.py", line 84, in Connect
-    return Connection(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3/dist-packages/MySQLdb/connections.py", line 179, in __init__
-    super(Connection, self).__init__(*args, **kwargs2)
-MySQLdb._exceptions.OperationalError: (2002, "Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)")
-
--->
-
+2026-04-29 00:00:00,0
+2026-04-29 03:00:00,1
+2026-04-29 06:00:00,1
+2026-04-29 09:00:00,1
+2026-04-29 12:00:00,2
+2026-04-29 15:00:00,1
+2026-04-29 18:00:00,2
+2026-04-29 21:00:00,2
+2026-04-30 00:00:00,2
+2026-04-30 03:00:00,1
+2026-04-30 06:00:00,2
+2026-04-30 09:00:00,2
+2026-04-30 12:00:00,2
+2026-04-30 15:00:00,3
+2026-04-30 18:00:00,3
+2026-04-30 21:00:00,4
+2026-05-01 00:00:00,3
+2026-05-01 03:00:00,3
+2026-05-01 06:00:00,3
+2026-05-01 09:00:00,2
+2026-05-01 12:00:00,1
+2026-05-01 15:00:00,2
+2026-05-01 18:00:00,3
+2026-05-01 21:00:00,1
+2026-05-02 00:00:00,2
+2026-05-02 03:00:00,1
+2026-05-02 06:00:00,1
+2026-05-02 09:00:00,2
+2026-05-02 12:00:00,1
+2026-05-02 15:00:00,1
+2026-05-02 18:00:00,2
+2026-05-02 21:00:00,2
+2026-05-03 00:00:00,2
+2026-05-03 03:00:00,2
+2026-05-03 06:00:00,2
+2026-05-03 09:00:00,1
+2026-05-03 12:00:00,1
+2026-05-03 15:00:00,3
+2026-05-03 18:00:00,1
+2026-05-03 21:00:00,1
+2026-05-04 00:00:00,1
+2026-05-04 03:00:00,2
+2026-05-04 06:00:00,2
+2026-05-04 09:00:00,3
+2026-05-04 12:00:00,3
+2026-05-04 15:00:00,4
+2026-05-04 18:00:00,5
+2026-05-04 21:00:00,4
+2026-05-05 00:00:00,3
+2026-05-05 03:00:00,2
+2026-05-05 06:00:00,2
+2026-05-05 09:00:00,2
+2026-05-05 12:00:00,1
+2026-05-05 15:00:00,1
+2026-05-05 18:00:00,1
+2026-05-05 21:00:00,1
+2026-05-06 00:00:00,0
+2026-05-06 03:00:00,1
+2026-05-06 06:00:00,2
+2026-05-06 09:00:00,1
+2026-05-06 12:00:00,-1
